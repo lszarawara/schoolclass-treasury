@@ -1,14 +1,16 @@
 package pl.sda.treasury.entity;
 
 
-import lombok.Setter;
-import org.hibernate.annotations.ManyToAny;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
+@Builder
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -41,8 +43,16 @@ public class User {
     Set<Child> children;
 
     public static enum Role {
-        Admin,
-        Superuser,
-        User
+        Admin("ROLE_ADMIN"),
+        Superuser("ROLE_ADMIN"),
+        User("ROLE_ADMIN");
+
+        public final String label;
+
+        private Role(String label) {
+            this.label = label;
+        }
+
+
     }
 }

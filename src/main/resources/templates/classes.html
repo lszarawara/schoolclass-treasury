@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista klas</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class = "container">
+  <h2>Lista klas</h2>
+  <table class="table table-striped ">
+    <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Nazwa</th>
+
+      <th scope="col"></th>
+    </tr>
+    </thead>
+
+
+    <tbody class="table-group-divider">
+    <tr th:each="schoolClass : ${schoolClasses}">
+      <th scope="row" th:text="${schoolClass.id}"> </th>
+      <td th:text="${schoolClass.name}"> </td>
+      <td>
+        <a class="btn btn-success btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Edytuj</a>
+        <span>
+                        <a class="btn btn-warning btn-sm" th:href="${'/mvc/class/delete/' + schoolClass.id}" role="button">Usuń</a>
+                        </span>
+      </td>
+
+    </tr>
+    </tbody>
+  </table>
+
+  <a class="btn btn-primary" href="/mvc/class/add" role="button">Dodaj kolejną klasę</a>
+</div>
+</body>
+</html>
