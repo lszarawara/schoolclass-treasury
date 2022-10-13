@@ -3,10 +3,7 @@ package pl.sda.treasury.mvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.rest.mapper.UserMapper;
 import pl.sda.treasury.service.UserService;
 
@@ -15,6 +12,13 @@ import pl.sda.treasury.service.UserService;
 @RequestMapping("/mvc/user")
 public class UserController {
     private final UserService userService;
+
+    //    @Secured("ROLE_ADMIN")
+    @GetMapping()
+    public String list (ModelMap model) {
+        model.addAttribute("users", userService.findAll());
+        return "users";
+    }
 
     //    @Secured("ROLE_ADMIN")
     @GetMapping("/add")
@@ -28,5 +32,11 @@ public class UserController {
     public String create(@ModelAttribute("user") CreateUserForm form) {
         userService.create(UserMapper.toEntity(form));
         return "redirect:/mvc/user/add";
+    }
+
+    @GetMapping("delete/{id}")
+    public String delete (@PathVariable("id") long id) {
+        userService.delete(id);
+        return "redirect:/mvc/user";
     }
 }

@@ -38,7 +38,7 @@
           <option value="">Wybierz z listy</option>
           <option th:each="role : ${T(pl.sda.treasury.entity.User.Role).values()}"
                   th:value="${role}"
-                  th:text="${role}">role
+                  th:text="${role.label}">role
           </option>
         </select>
       </div>
