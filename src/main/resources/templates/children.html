@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista dzieci</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class = "container">
+  <h2>Lista dzieci</h2>
+  <table class="table table-striped ">
+    <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+<!--      todo: widoczność w pełnym widoku listy-->
+      <th scope="col">Klasa</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+
+
+    <tbody class="table-group-divider">
+    <tr th:each="child : ${children}">
+      <th scope="row" th:text="${child.id}"> </th>
+      <td th:text="${child.firstName}"> </td>
+      <td th:text="${child.lastName}"> </td>
+      <td th:text="${child.schoolClass.name}"> </td>
+
+      <td>
+        <a class="btn btn-success btn-sm" th:href="${'/mvc/child/' + child.id}" role="button">Edytuj</a>
+        <span>
+                        <a class="btn btn-warning btn-sm" th:href="${'/mvc/child/delete/' + child.id}" role="button">Usuń</a>
+                        </span>
+      </td>
+
+    </tr>
+    </tbody>
+  </table>
+
+  <a class="btn btn-primary" href="/mvc/child/add" role="button">Dodaj kolejnego ucznia</a>
+</div>
+</body>
+</html>

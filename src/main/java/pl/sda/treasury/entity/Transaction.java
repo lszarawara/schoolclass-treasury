@@ -3,6 +3,7 @@ package pl.sda.treasury.entity;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 public class Transaction {
@@ -12,7 +13,7 @@ public class Transaction {
     private long id;
 
     @Column(nullable = false)
-    private String date; //data
+    private LocalDate date; //data
 
     @Column(nullable = false)
     private double amount;
