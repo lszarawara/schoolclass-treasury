@@ -1,4 +1,4 @@
-package pl.sda.treasury.rest.mapper;
+package pl.sda.treasury.mapper;
 
 import org.springframework.stereotype.Component;
 import pl.sda.treasury.entity.SchoolClass;

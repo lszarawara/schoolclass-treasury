@@ -44,9 +44,6 @@ public class User {
     Set<Child> children;
 
     public static enum Role {
-//        Admin("ROLE_ADMIN"),
-//        Superuser("ROLE_SUPERUSER"),
-//        User("ROLE_ADMIN"),
         ROLE_ADMIN("Admin"),
         ROLE_SUPERUSER("SuperUser"),
         ROLE_USER("User");

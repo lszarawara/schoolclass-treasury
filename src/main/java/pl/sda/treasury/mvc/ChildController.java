@@ -3,11 +3,8 @@ package pl.sda.treasury.mvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import pl.sda.treasury.rest.mapper.ChildMapper;
+import org.springframework.web.bind.annotation.*;
+import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.service.ChildService;
 import pl.sda.treasury.service.SchoolClassService;
 
@@ -39,5 +36,11 @@ public class ChildController {
     public String create(@ModelAttribute("child") CreateChildForm form) {
         childService.create(ChildMapper.toEntity(form));
         return "redirect:/mvc/child/add";
+    }
+
+    @GetMapping("delete/{id}")
+    public String delete (@PathVariable("id") long id) {
+        childService.delete(id);
+        return "redirect:/mvc/child";
     }
 }

@@ -3,11 +3,8 @@ package pl.sda.treasury.mvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import pl.sda.treasury.rest.mapper.SchoolClassMapper;
+import org.springframework.web.bind.annotation.*;
+import pl.sda.treasury.mapper.SchoolClassMapper;
 import pl.sda.treasury.service.SchoolClassService;
 
 @Controller
@@ -34,5 +31,11 @@ public class SchoolClassController {
          public String getSchoolClassesList(ModelMap model) {
         model.addAttribute("schoolClasses", schoolClassService.findAll());
         return "classes";
+    }
+
+    @GetMapping("delete/{id}")
+    public String delete (@PathVariable("id") long id) {
+        schoolClassService.delete(id);
+        return "redirect:/mvc/class";
     }
 }
