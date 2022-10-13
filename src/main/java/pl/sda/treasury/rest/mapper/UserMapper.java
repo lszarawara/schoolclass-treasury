@@ -15,7 +15,6 @@ public class UserMapper {
                 .login(form.getLogin())
                 .password(form.getPassword())
                 .role(User.Role.valueOf(form.getRole()))
-//                .role(User.Role.valueOf(form.getRole()))
                 .build();
     }
 }

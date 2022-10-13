@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.sda.treasury.rest.mapper.SchoolClassMapper;
-import pl.sda.treasury.rest.mapper.UserMapper;
 import pl.sda.treasury.service.SchoolClassService;
-import pl.sda.treasury.service.UserService;
 
 @Controller
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class SchoolClassController {
     }
 
     @GetMapping()
-         public String list (ModelMap model) {
+         public String getSchoolClassesList(ModelMap model) {
         model.addAttribute("schoolClasses", schoolClassService.findAll());
         return "classes";
     }
