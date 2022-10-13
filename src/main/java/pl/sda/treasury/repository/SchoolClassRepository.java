@@ -8,6 +8,4 @@ import java.util.List;
 
 public interface SchoolClassRepository extends PagingAndSortingRepository<SchoolClass, Long> {
 
-//    List<SchoolClass> findAllByIdGreaterThan(long id);
-
 }

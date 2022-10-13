@@ -14,7 +14,6 @@ public class ChildMapper {
                 .firstName(form.getFirstName())
                 .lastName(form.getLastName())
                 .schoolClass(form.getSchoolClass())
-//                .role(User.Role.valueOf(form.getRole()))
                 .build();
     }
 }
