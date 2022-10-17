@@ -3,6 +3,7 @@ package pl.sda.treasury.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Child;
+import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.repository.ChildRepository;
 import pl.sda.treasury.repository.UserRepository;
@@ -24,6 +25,13 @@ public class ChildService {
     public List<Child> findAll() {
         return StreamSupport
                 .stream(repository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
+
+    public List<Child> findAllBySchoolClass(SchoolClass schoolClass) {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .filter(child -> child.getSchoolClass().equals(schoolClass))
                 .collect(Collectors.toList());
     }
 

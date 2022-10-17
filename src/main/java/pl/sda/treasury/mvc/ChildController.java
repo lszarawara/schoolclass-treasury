@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.mapper.ChildMapper;
+import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.ChildService;
 import pl.sda.treasury.service.SchoolClassService;
 
@@ -38,7 +39,21 @@ public class ChildController {
         return "redirect:/mvc/child/add";
     }
 
-    @GetMapping("delete/{id}")
+
+    @GetMapping("/{id}")
+    public String showUpdateForm (@PathVariable("id") long id, ModelMap model) {
+        model.addAttribute("child", childService.find(id));
+        model.addAttribute("schoolClassList", schoolClassService.findAll());
+        return "update-child";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute("child") UpdateChildForm form) {
+        childService.create(ChildMapper.toEntity(form));
+        return "redirect:/mvc/child";
+    }
+
+    @PostMapping("/delete/{id}")
     public String delete (@PathVariable("id") long id) {
         childService.delete(id);
         return "redirect:/mvc/child";

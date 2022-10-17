@@ -1,11 +1,16 @@
 package pl.sda.treasury.entity;
 
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Builder
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Transaction {
 
     @Id
@@ -21,7 +26,6 @@ public class Transaction {
     @Column(nullable = false)
     private String description;
 
-    @Setter
     private Type type;
 
     @ManyToOne(fetch = FetchType.LAZY)

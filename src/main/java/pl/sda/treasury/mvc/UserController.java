@@ -15,7 +15,7 @@ public class UserController {
 
     //    @Secured("ROLE_ADMIN")
     @GetMapping()
-    public String list (ModelMap model) {
+    public String getUsersList(ModelMap model) {
         model.addAttribute("users", userService.findAll());
         return "users";
     }
@@ -46,7 +46,7 @@ public class UserController {
         return "redirect:/mvc/user";
     }
 
-    @GetMapping("delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete (@PathVariable("id") long id) {
         userService.delete(id);
         return "redirect:/mvc/user";

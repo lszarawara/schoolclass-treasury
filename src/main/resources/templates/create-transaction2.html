@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dodaj użytkownika</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <form action="#" th:action="@{/transaction/save}" th:object="${form}"
+          method="post">
+        <fieldset>
+            <input type="submit" id="submitButton" th:value="Save">
+            <input type="reset" id="resetButton" name="reset" th:value="Reset"/>
+            <table>
+                <thead>
+                <tr>
+                    <th> Child</th>
+                    <th> Amount</th>
+                    <th> Desc</th>
+                    <th> Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transaction, itemStat : *{transactions}">
+                    <td><input th:field="*{transactions[__${itemStat.index}__].child}" /></td>
+                    <td><input th:field="*{transactions[__${itemStat.index}__].amount}" /></td>
+                    <td><input th:field="*{transactions[__${itemStat.index}__].description}" /></td>
+                    <td><input th:field="*{transactions[__${itemStat.index}__].date}" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>
