@@ -3,9 +3,7 @@ package pl.sda.treasury.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Transaction;
-import pl.sda.treasury.entity.User;
 import pl.sda.treasury.repository.TransactionRepository;
-import pl.sda.treasury.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +24,18 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
+    public List<Transaction> findAllbyChild(Long id) {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .filter(transaction -> transaction.getChild().getId()==id)
+                .collect(Collectors.toList());
+    }
     public Transaction create(Transaction transaction) {
         return repository.save(transaction);
+    }
+
+    public Iterable<Transaction> createAll(List<Transaction> transactions) {
+        return repository.saveAll(transactions);
     }
 
     public Transaction update(Transaction transaction) {

@@ -1,6 +1,7 @@
 package pl.sda.treasury.mapper;
 
 import org.springframework.stereotype.Component;
+import pl.sda.treasury.dto.TransactionCreationDto;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mvc.CreateTransactionForm;
