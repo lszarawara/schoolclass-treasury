@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.repository.TransactionRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -46,4 +48,19 @@ public class TransactionService {
         repository.deleteById(id);
     }
 
+    public BigDecimal getPaymentSumForChildren(Long id) {
+        return findAllbyChild(id)
+                .stream()
+                .filter(transaction -> transaction.getType().equals(Transaction.Type.PAYMENT))
+                .map(transaction -> transaction.getAmount())
+                .reduce(BigDecimal.ZERO, (acc, curr) -> acc.add(curr));
+    }
+
+    public BigDecimal getDebitSumForChildren(Long id) {
+        return findAllbyChild(id)
+                .stream()
+                .filter(transaction -> transaction.getType().equals(Transaction.Type.DEBIT))
+                .map(transaction -> transaction.getAmount())
+                .reduce(BigDecimal.ZERO, (acc, curr) -> acc.add(curr));
+    }
 }

@@ -8,11 +8,6 @@
 </head>
 <body>
 <div class="container">
-
-
-
-<!--        <form  th:object="${selectedSchoolClass}" th:action="${'/mvc/transaction/add/' + selectedSchoolClass}" th:method="post">-->
-<!--        <form  th:object="${selectedSchoolClass}" th:action="${'/mvc/transaction/add/'}" th:method="get">-->
     <form th:object="${selectedSchoolClass}" th:method="post">
     <div class="form-group">
                 <label for="schoolClass" class="form-label">Klasa:</label>
@@ -25,8 +20,6 @@
                 </select>
                 <p></p>
                 <button type="submit" class="btn btn-primary">Przekaż wybraną klasę</button>
-<!--            <a class="btn btn-success btn-sm" th:href="${'/mvc/transaction/add/' + wybrana}" role="button">Edytuj</a>-->
-
             </div>
     </form>
 <!--i tak też nie chce przekazać zmiennej-->

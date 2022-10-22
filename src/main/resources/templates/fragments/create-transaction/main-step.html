@@ -1,0 +1,41 @@
+
+<input type="hidden" th:field="${preForm.transactionType}" class="form-control" id="transactionType2">
+<input type="hidden" th:field="${preForm.selectedOption}" class="form-control" id="selectedOption">
+<input type="hidden" th:field="${preForm.amount}" class="form-control" id="amount">
+
+<div class="mb-3">
+    <p th:text="'Opis transakcji: ' + ${form.getTransactions().get(1).getDescription()}"></p>
+</div>
+
+<div class="mb-3">
+    <p th:text="'Data: ' + ${preForm.date}"></p>
+</div>
+
+<P th:text="'Opcja: ' + ${preForm.selectedOption}" ></P>
+
+<fieldset>
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Child</th>
+            <th>Amount</th>
+            <th>Desc</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="transaction, itemStat : *{transactions}">
+            <td><input type="hidden" th:field="*{transactions[__${itemStat.index}__].child}" /></td>
+            <td><input type="hidden" th:field="*{transactions[__${itemStat.index}__].type}" /></td>
+            <td th:text="*{transactions[__${itemStat.index}__].child.getFirstName() + ' ' + transactions[__${itemStat.index}__].child.getLastName()}"></td>
+            <td><input type="number" step=".01" tabindex=1 th:field="*{transactions[__${itemStat.index}__].amount}" /></td>
+            <td><input tabindex=0 th:field="*{transactions[__${itemStat.index}__].description}" /></td>
+            <td><input type="date" tabindex=0 th:field="*{transactions[__${itemStat.index}__].date}" /></td>
+        </tr>
+        </tbody>
+    </table>
+    <p></p>
+    <input class="btn btn-primary" type="submit" id="submitButton" th:value="'Przypisz kwoty'">
+</fieldset>
