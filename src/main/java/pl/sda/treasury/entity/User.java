@@ -2,7 +2,6 @@ package pl.sda.treasury.entity;
 
 
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Set;
 

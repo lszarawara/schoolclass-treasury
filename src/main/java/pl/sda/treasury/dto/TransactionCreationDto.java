@@ -3,6 +3,7 @@ package pl.sda.treasury.dto;
 import lombok.*;
 import pl.sda.treasury.entity.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class TransactionCreationDto {
-    private List<Transaction> transactions;
+    private List<Transaction> transactions = new ArrayList<>();
 
 
     public void addTransaction(Transaction transaction) {
