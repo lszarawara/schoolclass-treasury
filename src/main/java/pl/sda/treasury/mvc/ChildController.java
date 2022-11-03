@@ -2,7 +2,6 @@ package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.Child;
@@ -14,7 +13,7 @@ import pl.sda.treasury.service.SchoolClassService;
 import pl.sda.treasury.service.TransactionService;
 import pl.sda.treasury.service.UserService;
 
-import javax.lang.model.type.ExecutableType;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -57,14 +56,20 @@ public class ChildController {
     }
 
     @GetMapping("/checkparent/{id}")
-    public String checkParentsEmail(@PathVariable("id") long id, ModelMap model) {
+    public String checkParentsEmail(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("parent", new CreateUserForm());
-        model.addAttribute("childId", id);
+        String idi = String.valueOf(id);
+        model.addAttribute("childId", idi);
         return "precreate-parent";
     }
 
-    @GetMapping("/parent")
-    public String showForm(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") Long id, ModelMap model) {
+
+    @PostMapping("/checkparent/{id}")
+//    @PostMapping("/checkparent")
+    public String showForm(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id, ModelMap model) {
+//    public String showForm(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") String id, ModelMap model) {
+//        tu nie działa Lang w Model Attribute
+
         try {
             model.addAttribute("user", userService.findByEmail(form.getEmail()));
             model.addAttribute("existingUser", true);
@@ -77,16 +82,24 @@ public class ChildController {
             return "create-parent";
         }
     }
-    @PostMapping("/parent")
-    public String createParent(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") Long id) {
+    @PostMapping("/parent/{id}")
+    public String createParent(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id) {
+        //todo: powtórzenia
+        try {
+            List<Child> newListOfChildren = form.getChildren();
+            Child newChild = childService.find(id);
+            newListOfChildren.add(newChild);
+            form.setChildren(newListOfChildren);
+        } catch (NullPointerException e) {
+            List<Child> newListOfChildren = new ArrayList<>();
+            Child newChild = childService.find(id);
+            newListOfChildren.add(newChild);
+            form.setChildren(newListOfChildren);
+        } finally {
+            userService.create(UserMapper.toEntity(form));
+            return "redirect:/mvc/user";
+        }
 
-        List<Child> newListOfChildren = form.getChildren();
-        Child newChild = childService.find(id);
-        newListOfChildren.add(newChild);
-        form.setChildren(newListOfChildren);
-        userService.create(UserMapper.toEntity(form));
-
-        return "create-parent";
     }
 
 

@@ -53,7 +53,7 @@ public class ChildService {
     }
 
     public Child createTechnicalAccountForSchoolClass(SchoolClass schoolClass) {
-        Child child = new Child(childService.find(id));
+        Child child = new Child();
         child.setFirstName("techniczne");
         child.setLastName("konto zaokrągleń");
         child.setSchoolClass(schoolClass);

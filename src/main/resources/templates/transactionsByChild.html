@@ -40,7 +40,8 @@
   <p th:text="'Saldo: ' + ${#numbers.formatDecimal(sumPayment - sumDebit, 1, 'DEFAULT', 2, 'DEFAULT')}"></p>
   <p></p>
 
-  <a class="btn btn-primary" href="/mvc/transaction/precreate" role="button">Dodaj kolejne transakcje</a>
+  <a class="btn btn-primary" onclick="history.back()" role="button">Powrót</a>
+  <a class="btn btn-primary" onclick="window.print()" role="button">Drukuj</a>
 </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.UserService;
 
@@ -26,7 +27,9 @@ public class UserController {
     //    @Secured("ROLE_ADMIN")
     @GetMapping("/add")
     public String showCreateForm(ModelMap model) {
-        model.addAttribute("user", new CreateUserForm());
+        CreateUserForm createUserForm = new CreateUserForm();
+        createUserForm.setRole(String.valueOf(User.Role.ROLE_SUPERUSER));
+        model.addAttribute("user", createUserForm);
         return "create-user";
     }
 

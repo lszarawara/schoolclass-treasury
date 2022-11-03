@@ -9,12 +9,7 @@
   <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
-  <script language="javascript" type="text/javascript">
-    $(document).ready(function () {
-      $('#childrenInClass').DataTable();
-      $('.dataTables_length').addClass('bs-select');
-    });
-  </script>
+  <span th:include="fragments/header/header.html"></span>
 
 </head>
 <body>
@@ -98,13 +93,13 @@
 
   <h4>Transakcje</h4>
   <div class="p-6">
-    <a class="h6" th:href="${'mvc/transaction/precreate/due'}">Dodaj nową składkę</a>
+    <a class="h6" th:href="@{/mvc/transaction/precreate/due}">Dodaj nową składkę</a>
   </div>
   <div class="p-6">
-    <a class="h6" th:href="@{mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>
+    <a class="h6" th:href="@{/mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>
   </div>
   <div class="p-6">
-    <a class="h6" th:href="@{mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>
+    <a class="h6" th:href="@{/mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>
   </div>
 </div>
 </body>

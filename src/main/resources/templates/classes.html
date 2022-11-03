@@ -27,17 +27,12 @@
       <td th:text="${schoolClass.name}"> </td>
       <td th:text="${schoolClass.user.getFirstName() + ' ' + schoolClass.user.getLastName()}"> </td>
       <td>
-        <a class="btn btn-success btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Edytuj</a>
-        <span>
-                        <a class="btn btn-warning btn-sm" th:href="${'/mvc/class/delete/' + schoolClass.id}" role="button">Usuń</a>
-                        </span>
+        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Edytuj</a>
       </td>
 
     </tr>
     </tbody>
   </table>
-
-  <a class="btn btn-primary" href="/mvc/class/add" role="button">Dodaj kolejną klasę</a>
 </div>
 </body>
 </html>

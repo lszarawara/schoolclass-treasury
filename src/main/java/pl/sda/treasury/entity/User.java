@@ -40,7 +40,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "parents")
+    @ManyToMany(mappedBy = "parents", cascade = CascadeType.PERSIST)
     List<Child> children;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
