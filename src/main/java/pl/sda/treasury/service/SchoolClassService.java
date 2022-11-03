@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
+import pl.sda.treasury.entity.User;
 import pl.sda.treasury.repository.ChildRepository;
 import pl.sda.treasury.repository.SchoolClassRepository;
 
@@ -24,6 +25,15 @@ public class SchoolClassService {
         return StreamSupport
                 .stream(repository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    public SchoolClass findLastId () {
+//        return repository.findTopByOrderByIdDesc();
+        //zamiennie ostatni ze streama:
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .reduce((first, second) -> second)
+                .orElse(null);
     }
 
     public SchoolClass create(SchoolClass schoolClass) {

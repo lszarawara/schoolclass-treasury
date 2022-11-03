@@ -14,6 +14,7 @@
     <tr>
       <th scope="col">Id</th>
       <th scope="col">Nazwa</th>
+      <th scope="col">Skarbnik</th>
 
       <th scope="col"></th>
     </tr>
@@ -24,6 +25,7 @@
     <tr th:each="schoolClass : ${schoolClasses}">
       <th scope="row" th:text="${schoolClass.id}"> </th>
       <td th:text="${schoolClass.name}"> </td>
+      <td th:text="${schoolClass.user.getFirstName() + ' ' + schoolClass.user.getLastName()}"> </td>
       <td>
         <a class="btn btn-success btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Edytuj</a>
         <span>

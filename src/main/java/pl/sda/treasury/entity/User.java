@@ -3,6 +3,7 @@ package pl.sda.treasury.entity;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,7 +41,11 @@ public class User {
     private Role role;
 
     @ManyToMany(mappedBy = "parents")
-    Set<Child> children;
+    List<Child> children;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    List<SchoolClass> schoolClasses;
+
 
     public static enum Role {
         ROLE_ADMIN("Admin"),

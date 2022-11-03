@@ -21,6 +21,14 @@ public class SchoolClass {
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @OneToMany(mappedBy = "schoolClass")
+    List<Child> children;
+
+    public SchoolClass(Long currentSchoolClass) {
+    }
 //    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY )
-//    private List<Child> children;
 }

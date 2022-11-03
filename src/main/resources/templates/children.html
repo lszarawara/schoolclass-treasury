@@ -32,12 +32,12 @@
 
       <td>
         <form th:action="${'/mvc/child/' + child.id}" th:method="get">
-        <button type="submit" class="btn btn-success btn-sm" >Edytuj</button>
+        <button type="submit" class="btn btn-outline-primary btn-sm" >Edytuj</button>
         </form>
       </td>
       <td>
-        <form th:action="${'/mvc/child/delete/' + child.id}" th:method="post">
-        <button type="submit" class="btn btn-warning btn-sm" >Usuń</button>
+        <form th:action="${'/mvc/child/balance/' + child.id}" th:method="post">
+        <button type="submit" class="btn btn-outline-primary btn-sm" >Zobacz transakcje</button>
         </form>
       </td>
 

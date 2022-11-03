@@ -6,8 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TreasuryApplication {
 
+
+    public static final Long currentSchoolClass = Long.valueOf(17);
+
     public static void main(String[] args) {
         SpringApplication.run(TreasuryApplication.class, args);
+
+
     }
 
 }

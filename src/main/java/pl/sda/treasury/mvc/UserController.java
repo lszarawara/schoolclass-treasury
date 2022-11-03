@@ -20,6 +20,9 @@ public class UserController {
         return "users";
     }
 
+
+
+
     //    @Secured("ROLE_ADMIN")
     @GetMapping("/add")
     public String showCreateForm(ModelMap model) {
@@ -31,10 +34,18 @@ public class UserController {
     @PostMapping("/add")
     public String create(@ModelAttribute("user") CreateUserForm form) {
         userService.create(UserMapper.toEntity(form));
-        return "redirect:/mvc/user/add";
+        return "redirect:/mvc/user/" + userService.findLastId().getId();
     }
 
+
+
+
     @GetMapping("/{id}")
+    public String showDetails (@PathVariable("id") long id, ModelMap model) {
+        model.addAttribute("user", userService.find(id));
+        return "user";
+    }
+    @GetMapping("/{id}/update")
     public String showUpdateForm (@PathVariable("id") long id, ModelMap model) {
         model.addAttribute("user", userService.find(id));
         return "update-user";

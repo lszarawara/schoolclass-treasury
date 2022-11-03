@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Klasa - szczegóły</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+  <script language="javascript" type="text/javascript">
+    $(document).ready(function () {
+      $('#childrenInClass').DataTable();
+      $('.dataTables_length').addClass('bs-select');
+    });
+  </script>
+
+</head>
+<body>
+<div class = "container">
+  <h2>Klasa</h2>
+  <p></p>
+<p th:text="'Nazwa: ' + ${schoolClass.getName()}"></p>
+  <p></p>
+  <p th:text="'Aktualne saldo środków pieniężnych: ' + ${schoolClassBalance}"></p>
+  <p th:text="'Aktualne saldo wpłat: ' + ${schoolClassPaymentBalance}"></p>
+  <p></p>
+
+
+  <h2>Uczniowie</h2>
+  <p></p>
+  <p th:text="'Klasa liczy uczniów: ' + ${schoolClass.getChildren().size() - 1}"></p>
+  <p></p>
+  <div th:unless="${schoolClass.getChildren().size()<2}">
+    <table id="childrenInClass"  class="table table-striped" >
+      <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Imię</th>
+        <th scope="col">Nazwisko</th>
+        <th scope="col">Saldo ucznia</th>
+        <th scope="col">Saldo wpłat ucznia</th>
+        <th scope="col">Liczba kont rodziców</th>
+      </tr>
+      </thead>
+
+
+      <tbody class="table-group-divider">
+      <tr th:each="child, iStat : ${schoolClass.getChildren()}">
+        <div th:unless="${child.isTechnical()}">
+          <th scope="row" th:text="${child.id}"> </th>
+          <td th:text="${child.firstName}"> </td>
+          <td th:text="${child.lastName}"> </td>
+  <!--        todo: Wątpię, że to się też przeiteruje - jak to ustawić???-->
+          <td th:text="${childrenBalances.get(iStat.index)}"> </td>
+          <td th:text="${childrenPaymentBalances.get(iStat.index)}"> </td>
+          <td th:text="${child.getParents().size()}"> </td>
+
+          <td>
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/' + child.id}" role="button">Edytuj</a>
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/checkparent/' + child.id}" role="button">Dodaj rodzica</a>
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/balance/' + child.id}" role="button">Transakcje</a>
+          </td>
+        </div>
+      </tr>
+
+<!--      todo:jak wyjąć tylko rachunek techniczny-->
+      <tr th:each="child, iStat : ${schoolClass.getChildren()}">
+        <div th:if="${child.isTechnical()}">
+          <th scope="row" th:text="${child.id}"> </th>
+          <td th:text="${child.firstName}"> </td>
+          <td th:text="${child.lastName}"> </td>
+          <!--        todo: Wątpię, że to się też przeiteruje - jak to ustawić???-->
+          <td th:text="${childrenBalances.get(iStat.index)}"> </td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+        </div>
+      </tr>
+
+      </tbody>
+    </table>
+
+    <a class="btn btn-primary" th:href="${'/mvc/child/add?schoolClassId=' + schoolClass.id}" role="button">Dodaj kolejnego ucznia</a>
+  </div>
+
+
+
+
+
+  <div th:if="${schoolClass.getChildren().size<2}">
+    <p>Nie masz jeszcze żadnego ucznia na liście w tej klasie</p>
+    <a class="btn btn-primary" th:href="${'/mvc/child/add?schoolClassId=' + schoolClass.id}" role="button">Dodaj pierwszego ucznia</a>
+  </div>
+
+  <p></p>
+
+  <h4>Transakcje</h4>
+  <div class="p-6">
+    <a class="h6" th:href="${'mvc/transaction/precreate/due'}">Dodaj nową składkę</a>
+  </div>
+  <div class="p-6">
+    <a class="h6" th:href="@{mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>
+  </div>
+  <div class="p-6">
+    <a class="h6" th:href="@{mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>
+  </div>
+</div>
+</body>
+</html>

@@ -33,7 +33,8 @@
       <td th:text="${user.role.label}"> </td>
 
       <td>
-        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id}" role="button">Edytuj</a>
+        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id}" role="button">Szczegóły</a>
+        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id + 'update'}" role="button">Edytuj</a>
         <span>
         <a class="btn btn-warning btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>
         </span>

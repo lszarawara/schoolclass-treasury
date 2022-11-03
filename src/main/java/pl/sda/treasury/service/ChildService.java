@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
-import pl.sda.treasury.entity.User;
 import pl.sda.treasury.repository.ChildRepository;
-import pl.sda.treasury.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +33,31 @@ public class ChildService {
                 .collect(Collectors.toList());
     }
 
+    public List<Child> findAllNonTechnicalBySchoolClass(SchoolClass schoolClass) {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .filter(child -> child.getSchoolClass().equals(schoolClass))
+                .filter(child -> !child.isTechnical())
+                .collect(Collectors.toList());
+    }
+
+    public Child findTechnicalBySchoolClass(SchoolClass schoolClass) {
+        return StreamSupport
+                .stream(repository.findAll().spliterator(), false)
+                .filter(child -> child.getSchoolClass().equals(schoolClass))
+                .filter(child -> child.isTechnical())
+                .findFirst().orElseThrow(() -> new RuntimeException("Technical account for school class =" + schoolClass.getName() + " not found"));
+    }
     public Child create(Child child) {
+        return repository.save(child);
+    }
+
+    public Child createTechnicalAccountForSchoolClass(SchoolClass schoolClass) {
+        Child child = new Child(childService.find(id));
+        child.setFirstName("techniczne");
+        child.setLastName("konto zaokrągleń");
+        child.setSchoolClass(schoolClass);
+        child.setTechnical(true);
         return repository.save(child);
     }
 
