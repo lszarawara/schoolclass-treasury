@@ -11,6 +11,7 @@ import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.mapper.TransactionMapper;
 import pl.sda.treasury.service.ChildService;
+import pl.sda.treasury.service.CurrentSchoolClass;
 import pl.sda.treasury.service.SchoolClassService;
 import pl.sda.treasury.service.TransactionService;
 
@@ -20,8 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static pl.sda.treasury.TreasuryApplication.currentSchoolClass;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/mvc/transaction")
@@ -30,6 +29,8 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final ChildService childService;
     private final SchoolClassService schoolClassService;
+
+    private final CurrentSchoolClass currentSchoolClass;
 
 
     @GetMapping
@@ -70,7 +71,7 @@ public class TransactionController {
 
     private TransactionCreationDto prepareTransactionCreationForm(TransactionPreCreationDto preForm) {
         TransactionCreationDto form = new TransactionCreationDto();
-        List<Child> childList = childService.findAllNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass));
+        List<Child> childList = childService.findAllNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
 
         for (int i=0; i< childList.size(); i++) {
             Transaction transaction = new Transaction();
@@ -173,7 +174,7 @@ public class TransactionController {
             roundingTransaction.setDate(preForm.getDate());
             roundingTransaction.setAmount(rounding);
             roundingTransaction.setDescription(preForm.getDescription());
-            roundingTransaction.setChild(childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass)));
+            roundingTransaction.setChild(childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId())));
             setTransactionType(preForm, roundingTransaction);
 //            Transaction roundingTransaction = new Transaction(,preForm.getDate(), rounding, preForm.getDescription(),null,
 //                    childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass)), null);
@@ -248,7 +249,7 @@ public class TransactionController {
     @GetMapping("/add")
     public String showCreateFormClassSelection(ModelMap model) {
         model.addAttribute("schoolClassList", schoolClassService.findAll());
-        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass));
+        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass.getId()));
 
         return "create-transaction";
     }

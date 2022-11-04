@@ -18,8 +18,8 @@
   <p></p>
 <p th:text="'Nazwa: ' + ${schoolClass.getName()}"></p>
   <p></p>
-  <p th:text="'Aktualne saldo środków pieniężnych: ' + ${schoolClassBalance}"></p>
-  <p th:text="'Aktualne saldo wpłat: ' + ${schoolClassPaymentBalance}"></p>
+  <p th:text="'Aktualne saldo środków pieniężnych: ' + ${#numbers.formatDecimal(schoolClassBalance, 1, 'WHITESPACE', 2, 'COMMA')}"></p>
+  <p th:text="'Aktualne saldo wpłat: ' + ${#numbers.formatDecimal(schoolClassPaymentBalance, 1, 'WHITESPACE', 2, 'COMMA')}"></p>
   <p></p>
 
 
@@ -42,14 +42,14 @@
 
 
       <tbody class="table-group-divider">
-      <tr th:each="child, iStat : ${schoolClass.getChildren()}">
+      <tr th:each="child, iStat : ${children}">
         <div th:unless="${child.isTechnical()}">
           <th scope="row" th:text="${child.id}"> </th>
           <td th:text="${child.firstName}"> </td>
           <td th:text="${child.lastName}"> </td>
   <!--        todo: Wątpię, że to się też przeiteruje - jak to ustawić???-->
-          <td th:text="${childrenBalances.get(iStat.index)}"> </td>
-          <td th:text="${childrenPaymentBalances.get(iStat.index)}"> </td>
+          <td th:text="${#numbers.formatDecimal(childrenBalances.get(iStat.index), 1, 'WHITESPACE', 2, 'COMMA')}"> </td>
+          <td th:text="${#numbers.formatDecimal(childrenPaymentBalances.get(iStat.index), 1, 'WHITESPACE', 2, 'COMMA')}"> </td>
           <td th:text="${child.getParents().size()}"> </td>
 
           <td>
@@ -59,19 +59,23 @@
           </td>
         </div>
       </tr>
-
-<!--      todo:jak wyjąć tylko rachunek techniczny-->
-      <tr th:each="child, iStat : ${schoolClass.getChildren()}">
-        <div th:if="${child.isTechnical()}">
-          <th scope="row" th:text="${child.id}"> </th>
-          <td th:text="${child.firstName}"> </td>
-          <td th:text="${child.lastName}"> </td>
-          <!--        todo: Wątpię, że to się też przeiteruje - jak to ustawić???-->
-          <td th:text="${childrenBalances.get(iStat.index)}"> </td>
-          <td> </td>
-          <td> </td>
-          <td> </td>
-        </div>
+      <tr>
+        <th>  </th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <th>  </th>
+        <td>Konto techniczne </td>
+        <td>Zaokrąglenia</td>
+        <td th:text="${#numbers.formatDecimal(schoolClassTechnicalAccountBalance, 1, 'WHITESPACE', 2, 'COMMA')}"> </td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
 
       </tbody>

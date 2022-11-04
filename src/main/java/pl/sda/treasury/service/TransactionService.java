@@ -9,9 +9,7 @@ import pl.sda.treasury.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -93,10 +91,10 @@ public class TransactionService {
         }
         return balance;
     }
-    public List<BigDecimal> getListOfBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllBySchoolClass(schoolClass);
+    public List<BigDecimal> getListOfNonTechnicalBalancesForSchoolClass(SchoolClass schoolClass) {
+        List<Child> childrenList = childService.findAllNonTechnicalBySchoolClass(schoolClass);
         List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllBySchoolClass(schoolClass).size(); i++) {
+        for (int i = 0; i < childService.findAllNonTechnicalBySchoolClass(schoolClass).size(); i++) {
             list.add(getBalanceForChild(childrenList.get(i).getId()));
         }
         return list;
@@ -110,12 +108,17 @@ public class TransactionService {
         return balance;
     }
 
-    public List<BigDecimal> getListOfPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllBySchoolClass(schoolClass);
+    public List<BigDecimal> getListOfNonTechnicalPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
+        List<Child> childrenList = childService.findAllNonTechnicalBySchoolClass(schoolClass);
         List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllBySchoolClass(schoolClass).size(); i++) {
+        for (int i = 0; i < childService.findAllNonTechnicalBySchoolClass(schoolClass).size(); i++) {
             list.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
         }
         return list;
+    }
+
+    public BigDecimal getBalanceForTechnicalAccountBySchoolClass(SchoolClass schoolClass) {
+        Long id = childService.findTechnicalBySchoolClass(schoolClass).getId();
+        return getPaymentSumForChildren(id).subtract(getDueSumForChildren(id));
     }
 }

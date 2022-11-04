@@ -42,6 +42,7 @@
   <a class="btn btn-primary" href="/mvc/transaction/precreate/pay" role="button">Dodaj kolejne wpłaty</a>
   <a class="btn btn-primary" href="/mvc/transaction/precreate/deb" role="button">Dodaj kolejne wydatki</a>
   <a class="btn btn-primary" href="/mvc/transaction/precreate/due" role="button">Dodaj kolejne składki</a>
+  <a class="btn btn-primary" th:href="'/mvc/class/' + ${createdTransactions.get(0).getChild().schoolClass.getId()}" role="button">Powrót do klasy</a>
 </div>
 </body>
 </html>

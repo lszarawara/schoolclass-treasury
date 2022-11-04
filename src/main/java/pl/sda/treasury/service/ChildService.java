@@ -1,6 +1,7 @@
 package pl.sda.treasury.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
@@ -28,14 +29,15 @@ public class ChildService {
 
     public List<Child> findAllBySchoolClass(SchoolClass schoolClass) {
         return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
                 .filter(child -> child.getSchoolClass().equals(schoolClass))
                 .collect(Collectors.toList());
+//        return repository.findAllBySchoolClass(schoolClass, Sort.by("firstName").and(Sort.by("lastName")));
     }
 
     public List<Child> findAllNonTechnicalBySchoolClass(SchoolClass schoolClass) {
         return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
+                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
                 .filter(child -> child.getSchoolClass().equals(schoolClass))
                 .filter(child -> !child.isTechnical())
                 .collect(Collectors.toList());

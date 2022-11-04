@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TreasuryApplication {
 
 
-    public static final Long currentSchoolClass = Long.valueOf(1);
+//    public static Long currentSchoolClass;
 
     public static void main(String[] args) {
         SpringApplication.run(TreasuryApplication.class, args);
