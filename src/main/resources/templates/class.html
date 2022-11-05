@@ -54,7 +54,7 @@
 
           <td>
             <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/' + child.id}" role="button">Edytuj</a>
-            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/checkparent/' + child.id}" role="button">Dodaj rodzica</a>
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/' + child.id + '/checkparent'}" role="button">Dodaj rodzica</a>
             <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/balance/' + child.id}" role="button">Transakcje</a>
           </td>
         </div>

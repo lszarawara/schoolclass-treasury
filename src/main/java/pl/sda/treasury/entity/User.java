@@ -3,6 +3,7 @@ package pl.sda.treasury.entity;
 
 import lombok.*;
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -40,8 +41,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "parents", cascade = CascadeType.PERSIST)
-    List<Child> children;
+//    @ManyToMany(mappedBy = "parents", cascade = CascadeType.PERSIST)
+////    List<Child> children;
+//    List<Child> children = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+      @JoinTable(
+            name = "user_child",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "child_id"))
+    List<Child> children = new ArrayList<>();
+
+
+
+
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     List<SchoolClass> schoolClasses;

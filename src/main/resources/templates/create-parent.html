@@ -11,8 +11,13 @@
   <h2>Dodawanie rodzica</h2>
 
 
-  <form th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
-<!--      <input type="hidden" th:field="*{id}" class="form-control" id="id">-->
+
+  <form th:if="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
+<!--Odkomentowany następny wiersz-->
+      <input th:if="${existingUser == 'Y'}" type="hidden" th:field="*{id}" class="form-control" id="id">
+      <input th:if="${existingUser == 'Y'}" type="hidden" th:field="*{schoolClasses}" class="form-control" id="schoolClasses">
+      <input type="hidden" th:object="${existingUser}" th:value="Y" class="form-control" id="existingUser">
+
       <div class="mb-3">
         <label for="firstName" class="form-label">Imię:</label>
         <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
@@ -41,6 +46,41 @@
 
     <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
   </form>
+
+
+    <form th:unless="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${parent}">
+
+        <input type="hidden" th:object="${existingUser}" th:value="N" class="form-control" id="existingUser">
+
+        <div class="mb-3">
+            <label for="firstName" class="form-label">Imię:</label>
+            <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Nazwisko:</label>
+            <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" th:field="*{email}" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+            <label for="login" class="form-label">Login:</label>
+            <input type="text" th:field="*{login}" class="form-control" id="login">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Hasło:</label>
+            <input type="password" th:field="*{password}" class="form-control" id="password">
+        </div>
+        <input type="hidden" th:field="*{role}" class="form-control" id="role">
+        <!--    </div>-->
+        <p></p>
+
+        <input type="hidden" th:field="${childId}" class="form-control" id="childId">
+
+        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+    </form>
+
 </div>
 </body>
 </html>

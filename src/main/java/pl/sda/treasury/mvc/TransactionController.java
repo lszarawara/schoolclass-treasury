@@ -29,7 +29,6 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final ChildService childService;
     private final SchoolClassService schoolClassService;
-
     private final CurrentSchoolClass currentSchoolClass;
 
 
@@ -183,67 +182,6 @@ public class TransactionController {
             transactionService.create(roundingTransaction);
         }
     }
-
-//    private void handleSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
-//        switch (preForm.getSelectedOption()) {
-////            case "0":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .filter(transaction -> transaction.getAmount() != null)
-//////                        .filter(transaction -> transaction.getAmount().signum()>0)
-////                        .collect(Collectors.toList()));
-////                break;
-////            case "1":
-////                int childrenNumber = form.getTransactions().size();
-////                BigDecimal amountToDebit = preForm.getAmount().divide(new BigDecimal(childrenNumber), 2, RoundingMode.HALF_EVEN);
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(amountToDebit); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-////            case "2":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-//            case "3":
-//                int childrenNumber = (int) form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .count();
-//
-//                BigDecimal amountToDebit = preForm.getAmount().divide(new BigDecimal(childrenNumber), 2, RoundingMode.HALF_EVEN);
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .map(transaction -> {transaction.setAmount(amountToDebit); return transaction;})
-//                        .collect(Collectors.toList()));
-//                break;
-//            case "4":
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
-//                        .collect(Collectors.toList()));
-//                break;
-//
-////            case "6":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(preForm.getAmount()
-////                                .subtract(transactionService.getBalanceForChild(transaction.getChild().getId()))); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-//
-//            default:
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getAmount() != null)
-//                        .collect(Collectors.toList()));
-//
-//        }
-//    }
 
 
     @GetMapping("/add")

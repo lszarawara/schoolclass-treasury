@@ -30,6 +30,7 @@ public class UserMapper {
                 .password(form.getPassword())
                 .role(User.Role.valueOf(form.getRole()))
                 .children(form.getChildren())
+                .schoolClasses(form.getSchoolClasses())
                 .build();
     }
 }

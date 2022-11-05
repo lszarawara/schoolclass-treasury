@@ -18,9 +18,13 @@
 
 
 
+
+
+
+
 <!--  <form th:method="get" th:action="@{/mvc/child/parent}" th:object="${parent}">-->
 <!--  <form th:method="post" th:action="@{/mvc/child/checkparent}" th:object="${parent}">-->
-  <form th:method="post" th:action="@{'/mvc/child/checkparent/' + __${childId}__}" th:object="${parent}">
+  <form th:method="post" th:action="@{'/mvc/child/' + __${childId}__ + '/checkparent'}" th:object="${parent}">
 
       <div class="mb-3">
         <label for="email" class="form-label">Podaj email rodzica:</label>

@@ -55,16 +55,16 @@ public class ChildController {
         return "redirect:/mvc/class/" + form.getSchoolClass().getId();
     }
 
-    @GetMapping("/checkparent/{id}")
+    @GetMapping("/{id}/checkparent")
     public String checkParentsEmail(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("parent", new CreateUserForm());
-        String idi = String.valueOf(id);
-        model.addAttribute("childId", idi);
+//        String idi = String.valueOf(id);
+        model.addAttribute("childId", String.valueOf(id));
         return "precreate-parent";
     }
 
 
-    @PostMapping("/checkparent/{id}")
+    @PostMapping("/{id}/checkparent")
 //    @PostMapping("/checkparent")
     public String showForm(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id, ModelMap model) {
 //    public String showForm(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") String id, ModelMap model) {
@@ -72,38 +72,47 @@ public class ChildController {
 
         try {
             model.addAttribute("user", userService.findByEmail(form.getEmail()));
-            model.addAttribute("existingUser", true);
+            model.addAttribute("existingUser", "Y");
         } catch (RuntimeException e){
+            //dodany wiersz kolejny:
             form.setRole(String.valueOf(User.Role.ROLE_USER));
-            model.addAttribute("user", form);
-            model.addAttribute("existingUser", false);
+            model.addAttribute("parent", form);
+            model.addAttribute("existingUser", "N");
         } finally {
             model.addAttribute("childId", id);
             return "create-parent";
         }
     }
     @PostMapping("/parent/{id}")
-    public String createParent(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id) {
+    public String createParent(@ModelAttribute("parent") CreateUserForm formC,
+                               @ModelAttribute("user") UpdateUserForm formU,
+                               @ModelAttribute("existingUser") String userExists,
+                               @PathVariable("id") Long id) {
         //todo: powtórzenia
-        try {
-            List<Child> newListOfChildren = form.getChildren();
-            Child newChild = childService.find(id);
-            newListOfChildren.add(newChild);
-            form.setChildren(newListOfChildren);
-        } catch (NullPointerException e) {
+        if(formU.getId().describeConstable().isPresent()) {
+//        if(userExists.equals("Y")) {
+            try {
+                List<Child> newListOfChildren = formU.getChildren();
+                Child newChild = childService.find(id);
+                newListOfChildren.add(newChild);
+                formU.setChildren(newListOfChildren);
+            } catch (NullPointerException e) {
+                List<Child> newListOfChildren = new ArrayList<>();
+                Child newChild = childService.find(id);
+                newListOfChildren.add(newChild);
+                formU.setChildren(newListOfChildren);
+            } finally {
+                userService.update(UserMapper.toEntity(formU));
+            }
+        } else {
             List<Child> newListOfChildren = new ArrayList<>();
             Child newChild = childService.find(id);
             newListOfChildren.add(newChild);
-            form.setChildren(newListOfChildren);
-        } finally {
-            userService.create(UserMapper.toEntity(form));
-            return "redirect:/mvc/user";
-        }
-
+            formC.setChildren(newListOfChildren);
+            userService.update(UserMapper.toEntity(formC));
+         }
+            return "redirect:/mvc/class/" + childService.find(id).getSchoolClass().getId();
     }
-
-
-
 
 
     @GetMapping("/{id}")

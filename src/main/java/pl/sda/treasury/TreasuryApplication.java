@@ -5,14 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TreasuryApplication {
-
-
-//    public static Long currentSchoolClass;
-
     public static void main(String[] args) {
         SpringApplication.run(TreasuryApplication.class, args);
-
-
     }
-
 }
