@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dodaj rodzica</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+
+
+<div class="container">
+  <h2>Dodawanie rodzica</h2>
+
+<!--    <p th:text="${childId}"></p>-->
+
+
+
+<!--  <form th:method="get" th:action="@{/mvc/child/parent}" th:object="${parent}">-->
+<!--  <form th:method="post" th:action="@{/mvc/child/checkparent}" th:object="${parent}">-->
+  <form th:method="post" th:action="@{'/mvc/child/checkparent/' + __${childId}__}" th:object="${parent}">
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Podaj email rodzica:</label>
+        <input type="email" th:field="*{email}" class="form-control" id="email">
+      </div>
+    <p></p>
+
+<!--      <input type="hidden" th:field="${childId}" class="form-control" id="childId">-->
+<!--      <input type="text" th: th:field="${childId}" class="form-control" id="childId">-->
+
+      <button type="submit" class="btn btn-primary">Sprawdź email</button>
+  </form>
+
+
+</div>
+</body>
+</html>

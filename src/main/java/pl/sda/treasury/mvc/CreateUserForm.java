@@ -1,6 +1,8 @@
 package pl.sda.treasury.mvc;
 
 import lombok.Data;
+import pl.sda.treasury.entity.Child;
+import java.util.List;
 
 @Data
 public class CreateUserForm {
@@ -10,4 +12,5 @@ public class CreateUserForm {
     private String login;
     private String password;
     private String role;
+    private List<Child> children;
 }

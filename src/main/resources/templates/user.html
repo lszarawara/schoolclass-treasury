@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Użytkownik - szczegóły</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+
+  <span th:include="fragments/header/header.html"></span>
+</head>
+<body>
+<div class = "container" style="padding: 20px;">
+  <div class="row border border-primary" style="padding: 20px; margin: 10px; ">
+    <h2>Użytkownik</h2>
+    <p th:text="'Imię i nazwisko: ' + ${user.getFirstName()} + ' ' + ${user.getLastName()}"></p>
+    <p th:text="'Email: ' + ${user.getEmail()}"></p>
+    <p th:text="'Login: ' + ${user.getLogin()}"></p>
+
+  <!--Zmiana hasła???-->
+  </div>
+
+  <div class="row border border-primary" style="padding: 20px; margin: 10px; ">
+    <h2>Twoje klasy</h2>
+    <div th:unless="${user.getSchoolClasses().isEmpty()}">
+      <table class="table table-striped ">
+        <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nazwa</th>
+          <th scope="col"></th>
+        </tr>
+        </thead>
+
+
+        <tbody class="table-group-divider">
+        <tr th:each="schoolclass : ${user.getSchoolClasses()}">
+          <th scope="row" th:text="${schoolclass.id}"> </th>
+          <td th:text="${schoolclass.name}"> </td>
+
+          <td>
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolclass.id}" role="button">Edytuj</a>
+    <!--        <span>-->
+    <!--        <a class="btn btn-warning btn-sm" th:href="${'/mvc/class/' + schoolclass.id}" role="button">Usuń</a>-->
+    <!--        </span>-->
+          </td>
+
+        </tr>
+        </tbody>
+      </table>
+
+      <a class="btn btn-primary" th:href="${'/mvc/class/add?userId=' + user.id}" role="button">Dodaj kolejną klasę</a>
+    </div>
+
+    <div th:if="${user.getSchoolClasses().isEmpty()}">
+      <p>Nie masz jeszcze utworzonej żadnej klasy, w której jesteś skarbnikiem</p>
+      <a class="btn btn-primary" th:href="${'/mvc/class/add?userId=' + user.id}" role="button">Dodaj pierwszą klasę</a>
+    </div>
+  </div>
+
+  <div th:unless="${user.getChildren().isEmpty()}" class="row border border-primary" style="padding: 20px; margin: 10px; ">
+    <p> </p>
+    <h2>Twoje dzieci</h2>
+    <table class="table table-striped ">
+      <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Imię</th>
+        <th scope="col">Nazwisko</th>
+        <th scope="col">Klasa</th>
+        <th scope="col"></th>
+      </tr>
+      </thead>
+
+
+      <tbody class="table-group-divider">
+      <tr th:each="child : ${user.getChildren()}">
+        <th scope="row" th:text="${child.id}"> </th>
+        <td th:text="${child.firstName}"> </td>
+        <td th:text="${child.lastName}"> </td>
+        <td th:text="${child.schoolClass}"> </td>
+
+        <td>
+          <a class="btn btn-success btn-sm" th:href="${'/mvc/child/balance/' + user.id}" role="button">Pokaż saldo</a>
+  <!--        <span>-->
+  <!--        <a class="btn btn-warning btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>-->
+  <!--        </span>-->
+        </td>
+
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

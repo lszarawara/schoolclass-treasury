@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edytuj konto dziecka</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+  <h2>Edycja konta dziecka</h2>
+
+  <form th:method="post" th:action="@{/mvc/child/update}" th:object="${child}">
+      <input type="hidden" th:field="*{id}" class="form-control" id="id">
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label">Imię:</label>
+        <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
+      </div>
+      <div class="mb-3">
+        <label for="lastName" class="form-label">Nazwisko:</label>
+        <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
+      </div>
+      <div class="form-group">
+        <label for="schoolClass" class="form-label">Klasa:</label>
+        <select class="form-control selectpicker" th:field="*{schoolClass}" id="schoolClass">
+          <option value="">Wybierz z listy</option>
+          <option th:each="class : ${schoolClassList}"
+                  th:value="${class.id}"
+                  th:text="${class.name}">schoolClass
+          </option>
+        </select>
+      </div>
+<!--    </div>-->
+    <p></p>
+
+<!--      <form th:action="${'/mvc/transaction/add/' + schoolClass}" th:method="get">-->
+<!--          <button type="submit" class="btn btn-warning btn-sm" >TEST</button>-->
+<!--      </form>-->
+
+
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+  </form>
+</div>
+</body>
+</html>

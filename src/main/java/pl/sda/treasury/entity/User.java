@@ -2,8 +2,8 @@ package pl.sda.treasury.entity;
 
 
 import lombok.*;
-
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,15 +37,21 @@ public class User {
     private String email;
 
     @Setter
+    @Enumerated(EnumType.STRING)
     private Role role;
 
-    @ManyToMany(mappedBy = "parents")
-    Set<Child> children;
+    @ManyToMany(mappedBy = "parents", cascade = CascadeType.PERSIST)
+    List<Child> children;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    List<SchoolClass> schoolClasses;
+
 
     public static enum Role {
-        Admin("ROLE_ADMIN"),
-        Superuser("ROLE_ADMIN"),
-        User("ROLE_ADMIN");
+        ROLE_ADMIN("Admin"),
+        ROLE_SUPERUSER("SuperUser"),
+        ROLE_USER("User");
+
 
         public final String label;
 
@@ -53,6 +59,9 @@ public class User {
             this.label = label;
         }
 
+        public String getLabel(){
+            return label;
+        }
 
     }
 }

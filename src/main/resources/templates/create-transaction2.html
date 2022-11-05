@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:>
+    <head>
+      <meta charset="UTF-8">
+      <title>Dodaj transakcję</title>
+      <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+      <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <h2 th:switch="${preForm.transactionType}">
+                <span th:case="pay">Wprowadzenie wpłat dzieci w klasie</span>
+                <span th:case="deb">Wprowadzenie wydatków w klasie</span>
+                <span th:case="due">Wprowadzenie nowej składki w klasie</span>
+            </h2>
+
+            <div th:unless="${isPredefined}" th:include="fragments/create-transaction/preform.html"></div>
+<!--            <form th:unless="${isPredefined}" th:action="@{/mvc/transaction/precreate}" th:object="${preForm}"-->
+<!--                  method="post" th:include="fragments/create-transaction/preform.html">-->
+<!--            </form>-->
+
+            <form th:if="${isPredefined}" th:action="@{/mvc/transaction/create}" th:object="${form}"
+                  method="post" th:include="fragments/create-transaction/main-step.html">
+            </form>
+        </div>
+    </body>
+</html>

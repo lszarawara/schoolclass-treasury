@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista transakcji</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class = "container">
+  <h2>Lista transakcji</h2>
+  <table class="table table-sm table-striped w-75">
+    <thead class="thead-light">
+    <tr>
+      <th scope="col" >Id</th>
+      <th scope="col" >Imię</th>
+      <th scope="col" >Nazwisko</th>
+<!--      todo: widoczność w pełnym widoku listy-->
+      <th scope="col" >Klasa</th>
+      <th scope="col" >Data</th>
+      <th scope="col" >Kwota</th>
+      <th scope="col" >Opis</th>
+      <th scope="col" >Typ</th>
+    </tr>
+    </thead>
+
+
+    <tbody class="table-group-divider">
+    <tr th:each="transaction : ${transactions}">
+      <th scope="row" th:text="${transaction.id}"> </th>
+      <td th:text="${transaction.getChild().firstName}"> </td>
+      <td th:text="${transaction.getChild().lastName}"> </td>
+      <td th:text="${transaction.getChild().schoolClass.name}"> </td>
+      <td th:text="${#temporals.format(transaction.date, 'dd-MM-yyyy')}"> </td>
+      <td th:text="${#numbers.formatDecimal(transaction.amount, 1, 'DEFAULT', 2, 'DEFAULT')}" type="number" step=".01"> </td>
+      <td th:text="${transaction.description}"> </td>
+      <td th:text="${transaction.type.label}"> </td>
+
+
+    </tr>
+    </tbody>
+  </table>
+
+  <a class="btn btn-primary" href="/mvc/transaction/precreate/pay" role="button">Dodaj kolejne wpłaty</a>
+  <a class="btn btn-primary" href="/mvc/transaction/precreate/deb" role="button">Dodaj kolejne wydatki</a>
+  <a class="btn btn-primary" href="/mvc/transaction/precreate/due" role="button">Dodaj kolejne składki</a>
+</div>
+</body>
+</html>

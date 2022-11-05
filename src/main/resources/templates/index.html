@@ -5,23 +5,54 @@
       <title>Skarbnik klasowy</title>
       <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
       <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+
+      <span th:include="fragments/header/header.html"></span>
+        <p>Ten nagłówek wyżej to przykład do wykorzystania</p>
   </head>
     <body>
+
+
+
+
+
+
     <div class="container ">
       <h3>Skarbnik klasowy</h3>
+
+        <p>Tworzymy użytkownika z prawami SUPERUSER - skarbnik</p>
+        <div class="p-6">
+            <a class="h6" th:href="@{mvc/user/add}">Dodaj skarbnika</a>
+        </div>
+
+
+        <p></p>
+        <p>A tu do podglądu listy</p>
     <div class="p-6">
       <a class="h6" th:href="@{mvc/class}">Lista klas</a>
     </div>
+<!--    <div class="p-6">-->
+<!--      <a class="h6" th:href="@{mvc/class/add}">Nowa klasa</a>-->
+<!--    </div>-->
     <div class="p-6">
-      <a class="h6" th:href="@{mvc/class/add}">Nowa klasa</a>
+        <a class="h6" th:href="@{mvc/user}">Lista użytkowników</a>
     </div>
     <div class="p-6">
         <a class="h6" th:href="@{mvc/child}">Lista uczniów</a>
     </div>
-    <div class="p-6">
-        <a class="h6" th:href="@{mvc/child/add}">Dodaj ucznia</a>
-    </div>
-
+<!--    <div class="p-6">-->
+<!--        <a class="h6" th:href="@{mvc/child/add}">Dodaj ucznia</a>-->
+<!--    </div>-->
+    <p></p>
+<!--    <h4>Transakcje</h4>-->
+<!--    <div class="p-6">-->
+<!--        <a class="h6" th:href="@{mvc/transaction/precreate/due}">Dodaj nową składkę</a>-->
+<!--    </div>-->
+<!--    <div class="p-6">-->
+<!--        <a class="h6" th:href="@{mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>-->
+<!--    </div>-->
+<!--    <div class="p-6">-->
+<!--        <a class="h6" th:href="@{mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>-->
+<!--    </div>-->
 
     </div>
 
