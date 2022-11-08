@@ -45,7 +45,7 @@ public class TransactionController {
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
 
-        return "create-transaction2";
+        return "create-transaction";
     }
 
     private static TransactionPreCreationDto prepareTransactionPreCreationDto(String type) {
@@ -64,7 +64,7 @@ public class TransactionController {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
-            return "create-transaction2";
+            return "create-transaction";
 
     }
 

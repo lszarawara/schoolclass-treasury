@@ -1,6 +1,7 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import pl.sda.treasury.service.SchoolClassService;
 import pl.sda.treasury.service.TransactionService;
 import pl.sda.treasury.service.UserService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,6 +136,9 @@ public class ChildController {
         return "redirect:/mvc/child";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("@securityService.isParent(#id)")
+//    @PreAuthorize("isParent(#id)")
     @GetMapping("/balance/{id}")
     public String getTransactionsListByChildId(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("transactions", transactionService.findAllbyChild(id));
@@ -143,4 +148,9 @@ public class ChildController {
 
         return "transactionsByChild";
     }
+
+//    public boolean isParent(Principal principal, Long ChildId) {
+//        return userService.findByLogin(principal.getName()).getChildren().contains(childService.find(ChildId));
+//    }
+
 }

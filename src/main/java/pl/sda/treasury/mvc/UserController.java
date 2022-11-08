@@ -1,12 +1,15 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.UserService;
+
+import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,33 +24,43 @@ public class UserController {
         return "users";
     }
 
-
-
-
     //    @Secured("ROLE_ADMIN")
     @GetMapping("/add")
-    public String showCreateForm(ModelMap model) {
+    public String showCreateForm(Principal principal, ModelMap model) {
         CreateUserForm createUserForm = new CreateUserForm();
-        createUserForm.setRole(String.valueOf(User.Role.ROLE_SUPERUSER));
-        model.addAttribute("user", createUserForm);
-        return "create-user";
+        try {
+            userService.findByLogin(principal.getName()).getRole();
+        } catch (NullPointerException e) {
+            createUserForm.setRole(String.valueOf(User.Role.ROLE_SUPERUSER));
+        } finally {
+            model.addAttribute("user", createUserForm);
+            return "create-user";
+        }
     }
 
     //    @Secured("ROLE_ADMIN")
     @PostMapping("/add")
     public String create(@ModelAttribute("user") CreateUserForm form) {
-        userService.create(UserMapper.toEntity(form));
-        return "redirect:/mvc/user/" + userService.findLastId().getId();
+        User user = userService.create(UserMapper.toEntity(form));
+//      todo: if ADMIN: return "redirect:/mvc/user/" + user.getId();
+        return "redirect:/mvc/user/current";
     }
 
 
+    @GetMapping("/current")
+    public String showCurrentUserDetails (Principal principal, ModelMap model) {
+//        model.addAttribute("user", userService.find(Long.parseLong(principal.getName())));
+        model.addAttribute("user", userService.findByLogin(principal.getName()));
+        return "user";
+    }
 
-
+    @Secured("ROLE_ADMIN")
     @GetMapping("/{id}")
     public String showDetails (@PathVariable("id") long id, ModelMap model) {
         model.addAttribute("user", userService.find(id));
         return "user";
     }
+
     @GetMapping("/{id}/update")
     public String showUpdateForm (@PathVariable("id") long id, ModelMap model) {
         model.addAttribute("user", userService.find(id));

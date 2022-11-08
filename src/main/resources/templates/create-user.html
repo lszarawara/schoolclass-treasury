@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Dodaj użytkownika</title>
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class="container">
-  <h2>Dodawanie nowego użytkownika/rodzica</h2>
+    <h2>Dodawanie nowego skarbnika <span sec:authorize="hasRole('ROLE_ADMIN')"> /użytkownika</span></h2>
 
   <form th:method="post" th:action="@{/mvc/user/add}" th:object="${user}">
 
@@ -32,18 +34,19 @@
         <label for="password" class="form-label">Hasło:</label>
         <input type="password" th:field="*{password}" class="form-control" id="password">
       </div>
-<!--      <div class="form-group">-->
-<!--        <label for="role" class="form-label">Rola:</label>-->
-<!--        <select class="form-control selectpicker" th:field="*{role}" id="role">-->
-<!--          <option value="">Wybierz z listy</option>-->
-<!--          <option th:each="role : ${T(pl.sda.treasury.entity.User.Role).values()}"-->
-<!--                  th:value="${role}"-->
-<!--                  th:text="${role.label}">role-->
-<!--          </option>-->
-<!--        </select>-->
-<!--      </div>-->
-<!--    </div>-->
-      <input type="hidden" th:field="*{role}" class="form-control" id="role">
+      <input sec:authorize="!hasRole('ROLE_ADMIN')" type="hidden" th:field="*{role}" class="form-control" id="role1">
+
+      <div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group">
+        <label for="role2" class="form-label">Rola:</label>
+        <select class="form-control selectpicker" th:field="*{role}" id="role2">
+          <option value="">Wybierz z listy</option>
+          <option th:each="role : ${T(pl.sda.treasury.entity.User.Role).values()}"
+                  th:value="${role}"
+                  th:text="${role.label}">role
+          </option>
+        </select>
+      </div>
+
 
     <p></p>
 

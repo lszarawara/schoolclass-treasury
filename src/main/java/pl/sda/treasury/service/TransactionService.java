@@ -119,6 +119,6 @@ public class TransactionService {
 
     public BigDecimal getBalanceForTechnicalAccountBySchoolClass(SchoolClass schoolClass) {
         Long id = childService.findTechnicalBySchoolClass(schoolClass).getId();
-        return getPaymentSumForChildren(id).subtract(getDueSumForChildren(id));
+        return getPaymentSumForChildren(id).subtract(getDebitSumForChildren(id));
     }
 }

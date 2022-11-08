@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class = "container">
   <h2>Lista użytkowników</h2>
   <table class="table table-striped ">
@@ -34,7 +36,7 @@
 
       <td>
         <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id}" role="button">Szczegóły</a>
-        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id + 'update'}" role="button">Edytuj</a>
+        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id + '/update'}" role="button">Edytuj</a>
         <span>
         <a class="btn btn-warning btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>
         </span>

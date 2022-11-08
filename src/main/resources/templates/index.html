@@ -5,16 +5,9 @@
       <title>Skarbnik klasowy</title>
       <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
       <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
-
-      <span th:include="fragments/header/header.html"></span>
-        <p>Ten nagłówek wyżej to przykład do wykorzystania</p>
-  </head>
+</head>
     <body>
-
-
-
-
-
+<header th:insert="fragments/header/header.html"></header>
 
     <div class="container ">
       <h3>Skarbnik klasowy</h3>
@@ -53,7 +46,7 @@
 <!--    <div class="p-6">-->
 <!--        <a class="h6" th:href="@{mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>-->
 <!--    </div>-->
-
+        <footer th:insert="fragments/footer/footer.html"></footer>
     </div>
 
 

@@ -8,11 +8,11 @@
 
   <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
   <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
-  <span th:include="fragments/header/header.html"></span>
-
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
+
 <div class = "container">
   <h2>Klasa</h2>
   <p></p>
@@ -106,5 +106,7 @@
     <a class="h6" th:href="@{/mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>
   </div>
 </div>
+
+<footer th:insert="fragments/footer/footer.html"></footer>
 </body>
 </html>

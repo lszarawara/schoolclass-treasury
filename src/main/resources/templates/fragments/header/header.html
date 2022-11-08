@@ -1,20 +1,22 @@
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
+<div class="container" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 px-3 mb-4 border-bottom" th:style="'background: rgba(158, 212, 246, 0.24)'">
         <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">Klasowy skarb<use xlink:href="#bootstrap"></use></svg>
+<!--            <svg class="bi me-2" width="40" height="32" role="img" src="images/skakla.jpg" aria-label="Bootstrap">Klasowy skarb<use xlink:href="#bootstrap"></use></svg>-->
+            <img height="64" th:cellpadding="20" th:src="@{/images/skakla.png}" alt="Skarbnik klasowy" >
         </a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li>
             <li><a href="/mvc/user/1" class="nav-link px-2 link-dark">User 1 details</a></li>
             <li><a href="/mvc/user/2" class="nav-link px-2 link-dark">User 2 details</a></li>
-            <li><a href="#" class="nav-link px-2 link-dark">Link3</a></li>
+            <li><a href="/mvc/user/6" class="nav-link px-2 link-dark">Parent 6 details</a></li>
             <li><a href="#" class="nav-link px-2 link-dark">Link4</a></li>
         </ul>
 
         <div class="col-md-3 text-end">
-            <button type="button" class="btn btn-outline-primary me-2">Login</button>
-            <button type="button" class="btn btn-primary">Sign-up</button>
+            <a sec:authorize="!isAuthenticated()" type="button" href="/login" class="btn btn-outline-primary me-2">Login</a>
+            <a sec:authorize="!isAuthenticated()" type="button" href="/mvc/user/add" class="btn btn-outline-primary me-2">Sign-up</a>
+            <a sec:authorize="isAuthenticated()" type="button" href="/logout" class="btn btn-outline-primary me-2">Logout</a>
         </div>
     </header>
 </div>
