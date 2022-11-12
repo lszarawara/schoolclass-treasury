@@ -38,6 +38,10 @@ public class User {
     private String email;
 
     @Setter
+    @Column(nullable = false)
+    private Boolean isEnabled;
+
+    @Setter
     @Enumerated(EnumType.STRING)
     private Role role;
 

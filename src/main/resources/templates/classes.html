@@ -29,12 +29,16 @@
       <td th:text="${schoolClass.name}"> </td>
       <td th:text="${schoolClass.user.getFirstName() + ' ' + schoolClass.user.getLastName()}"> </td>
       <td>
-        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Edytuj</a>
+        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolClass.id}" role="button">Zobasz szczegóły</a>
       </td>
 
     </tr>
     </tbody>
   </table>
+  <a class="btn btn-primary" onclick="history.back()" role="button">Powrót</a>
+  <a class="btn btn-primary" onclick="window.print()" role="button">Drukuj</a>
 </div>
+<footer th:insert="fragments/footer/footer.html"></footer>
+
 </body>
 </html>

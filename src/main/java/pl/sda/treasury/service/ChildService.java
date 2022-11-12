@@ -35,11 +35,21 @@ public class ChildService {
 //        return repository.findAllBySchoolClass(schoolClass, Sort.by("firstName").and(Sort.by("lastName")));
     }
 
-    public List<Child> findAllNonTechnicalBySchoolClass(SchoolClass schoolClass) {
+    public List<Child> findAllActiveNonTechnicalBySchoolClass(SchoolClass schoolClass) {
         return StreamSupport
                 .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
                 .filter(child -> child.getSchoolClass().equals(schoolClass))
                 .filter(child -> !child.isTechnical())
+                .filter(child -> child.getIsActive())
+                .collect(Collectors.toList());
+    }
+
+    public List<Child> findAllNonActiveNonTechnicalBySchoolClass(SchoolClass schoolClass) {
+        return StreamSupport
+                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
+                .filter(child -> child.getSchoolClass().equals(schoolClass))
+                .filter(child -> !child.isTechnical())
+                .filter(child -> !child.getIsActive())
                 .collect(Collectors.toList());
     }
 

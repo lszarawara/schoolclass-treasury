@@ -19,9 +19,8 @@
   <!--Zmiana hasła???-->
   </div>
 
-<!--  todo: tylko dla SUPERUSERA-->
   <div sec:authorize="hasAnyRole('ADMIN', 'SUPERUSER')" class="row border border-primary" style="padding: 20px; margin: 10px; ">
-    <h2>Twoje klasy</h2>
+    <h2>Skarbnik - Twoje klasy</h2>
     <div th:unless="${user.getSchoolClasses().isEmpty()}">
       <table class="table table-striped ">
         <thead>
@@ -39,10 +38,7 @@
           <td th:text="${schoolclass.name}"> </td>
 
           <td>
-            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolclass.id}" role="button">Edytuj</a>
-    <!--        <span>-->
-    <!--        <a class="btn btn-warning btn-sm" th:href="${'/mvc/class/' + schoolclass.id}" role="button">Usuń</a>-->
-    <!--        </span>-->
+            <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/class/' + schoolclass.id}" role="button">Przejdź do klasy</a>
           </td>
 
         </tr>
@@ -60,7 +56,7 @@
 
   <div th:unless="${user.getChildren().isEmpty()}" class="row border border-primary" style="padding: 20px; margin: 10px; ">
     <p> </p>
-    <h2>Twoje dzieci</h2>
+    <h2>Rodzic - Twoje dzieci</h2>
     <table class="table table-striped ">
       <thead>
       <tr>

@@ -16,30 +16,25 @@
 
   <form th:if="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
 <!--Odkomentowany następny wiersz-->
-      <input th:if="${existingUser == 'Y'}" type="hidden" th:field="*{id}" class="form-control" id="id">
-      <input th:if="${existingUser == 'Y'}" type="hidden" th:field="*{schoolClasses}" class="form-control" id="schoolClasses">
-      <input th:if="${existingUser == 'Y'}" type="hidden" th:field="*{children}" class="form-control" id="children">
+      <input type="hidden" th:field="*{id}" class="form-control" id="id">
+      <input type="hidden" th:field="*{schoolClasses}" class="form-control" id="schoolClasses">
+      <input type="hidden" th:field="*{children}" class="form-control" id="children">
+      <input type="hidden" th:field="*{password}" class="form-control" id="password">
+      <input type="hidden" th:field="*{login}" class="form-control" id="login">
+      <input type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
       <input type="hidden" th:object="${existingUser}" th:value="Y" class="form-control" id="existingUser">
 
       <div class="mb-3">
         <label for="firstName" class="form-label">Imię:</label>
-        <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
+        <input type="text" th:field="*{firstName}" readonly class="form-control" id="firstName">
       </div>
       <div class="mb-3">
         <label for="lastName" class="form-label">Nazwisko:</label>
-        <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
+        <input type="text" th:field="*{lastName}" readonly class="form-control" id="lastName">
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email:</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email">
-      </div>
-      <div class="mb-3">
-        <label for="login" class="form-label">Login:</label>
-        <input type="text" th:field="*{login}" class="form-control" id="login">
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Hasło:</label>
-        <input type="password" th:field="*{password}" class="form-control" id="password">
+        <input type="email" th:field="*{email}" readonly class="form-control" id="email">
       </div>
       <input type="hidden" th:field="*{role}" class="form-control" id="role">
 <!--    </div>-->
@@ -47,7 +42,14 @@
 
       <input type="hidden" th:field="${childId}" class="form-control" id="childId">
 
-    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+      <div th:if="${parentAlreadyAdded}">
+          <h6 class="text-danger">Ten rodzic został już przypisany do tego dziecka!</h6>
+          <p></p>
+          <a class="btn btn-primary" th:href="${'/mvc/class/' + __${schoolClass}__}" role="button">Wróć do klasy</a>
+      </div>
+
+
+    <button th:unless="${parentAlreadyAdded}" type="submit" class="btn btn-primary">Dodaj rodzica do dziecka</button>
   </form>
 
 
@@ -76,12 +78,13 @@
             <input type="password" th:field="*{password}" class="form-control" id="password2">
         </div>
         <input type="hidden" th:field="*{role}" class="form-control" id="role2">
+        <input type="hidden" th:field="${parent.isEnabled}" class="form-control" id="isEnabled2">
         <!--    </div>-->
         <p></p>
 
         <input type="hidden" th:field="${childId}" class="form-control" id="childId2">
 
-        <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+        <button type="submit" class="btn btn-primary">Utwórz rodzica i dodaj do dziecka</button>
     </form>
 
 </div>

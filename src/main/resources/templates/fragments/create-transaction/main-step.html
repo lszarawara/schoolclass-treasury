@@ -89,7 +89,6 @@
         </tbody>
     </table>
 
-
-    <p></p>
-    <input class="btn btn-primary" type="submit" id="submitButton" th:value="'Przypisz kwoty'">
+    <input class="btn btn-primary" type="submit" id="submitButton" th:value="'Zatwierdź'">
+    <a class="btn btn-outline-primary" th:href="${'/mvc/class/' + __${form.transactions[0].child.getSchoolClass().getId}__}" role="button">Rezygnuj i wróć do klasy</a>
 </fieldset>

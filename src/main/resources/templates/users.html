@@ -35,18 +35,19 @@
       <td th:text="${user.role.label}"> </td>
 
       <td>
-        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id}" role="button">Szczegóły</a>
-        <a class="btn btn-success btn-sm" th:href="${'/mvc/user/' + user.id + '/update'}" role="button">Edytuj</a>
-        <span>
-        <a class="btn btn-warning btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>
-        </span>
+        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/user/' + user.id}" role="button">Szczegóły</a>
+        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/user/' + user.id + '/update'}" role="button">Edytuj</a>
+        <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>
       </td>
 
     </tr>
     </tbody>
   </table>
 
-  <a class="btn btn-primary" href="/mvc/user/add" role="button">Dodaj kolejnego użytkownika</a>
+<!--  <a class="btn btn-primary" href="/mvc/user/add" role="button">Dodaj kolejnego użytkownika</a>-->
+  <a class="btn btn-primary" onclick="history.back()" role="button">Powrót</a>
+  <a class="btn btn-primary" onclick="window.print()" role="button">Drukuj</a>
 </div>
+<footer th:insert="fragments/footer/footer.html"></footer>
 </body>
 </html>

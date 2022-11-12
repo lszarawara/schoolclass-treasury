@@ -15,6 +15,7 @@ public class UserMapper {
                 .email(form.getEmail())
                 .login(form.getLogin())
                 .password(form.getPassword())
+                .isEnabled(form.getIsEnabled())
                 .role(User.Role.valueOf(form.getRole()))
                 .children(form.getChildren())
                 .build();
@@ -28,6 +29,7 @@ public class UserMapper {
                 .email(form.getEmail())
                 .login(form.getLogin())
                 .password(form.getPassword())
+                .isEnabled(form.getIsEnabled())
                 .role(User.Role.valueOf(form.getRole()))
                 .children(form.getChildren())
                 .schoolClasses(form.getSchoolClasses())

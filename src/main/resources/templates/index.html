@@ -1,54 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" xmlns:background-image="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
       <meta charset="UTF-8">
       <title>Skarbnik klasowy</title>
       <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
       <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-    <body>
-<header th:insert="fragments/header/header.html"></header>
 
-    <div class="container ">
+
+<body>
+    <header th:insert="fragments/header/header.html"></header>
+
+    <div class = "container">
       <h3>Skarbnik klasowy</h3>
 
-        <p>Tworzymy użytkownika z prawami SUPERUSER - skarbnik</p>
-        <div class="p-6">
-            <a class="h6" th:href="@{mvc/user/add}">Dodaj skarbnika</a>
-        </div>
 
+        <h4>Witaj w cudownym serwisie dla skarbników klasowych!!!</h4>
+        <h4>Aby rozpocząć wybierz guzik</h4>
+<!--        <a sec:authorize="!isAuthenticated()" type="button" href="/mvc/user/add" class="btn btn-outline-primary me-2">Sign-up</a>  -->
 
-        <p></p>
-        <p>A tu do podglądu listy</p>
-    <div class="p-6">
-      <a class="h6" th:href="@{mvc/class}">Lista klas</a>
-    </div>
-<!--    <div class="p-6">-->
-<!--      <a class="h6" th:href="@{mvc/class/add}">Nowa klasa</a>-->
-<!--    </div>-->
-    <div class="p-6">
-        <a class="h6" th:href="@{mvc/user}">Lista użytkowników</a>
-    </div>
-    <div class="p-6">
-        <a class="h6" th:href="@{mvc/child}">Lista uczniów</a>
-    </div>
-<!--    <div class="p-6">-->
-<!--        <a class="h6" th:href="@{mvc/child/add}">Dodaj ucznia</a>-->
-<!--    </div>-->
-    <p></p>
-<!--    <h4>Transakcje</h4>-->
-<!--    <div class="p-6">-->
-<!--        <a class="h6" th:href="@{mvc/transaction/precreate/due}">Dodaj nową składkę</a>-->
-<!--    </div>-->
-<!--    <div class="p-6">-->
-<!--        <a class="h6" th:href="@{mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>-->
-<!--    </div>-->
-<!--    <div class="p-6">-->
-<!--        <a class="h6" th:href="@{mvc/transaction/precreate/deb}">Dodaj wydatki na konta uczniów</a>-->
-<!--    </div>-->
-        <footer th:insert="fragments/footer/footer.html"></footer>
-    </div>
+    <a class="d-flex align-items-center">
+        <img height="320" th:cellpadding="20" th:src="@{/images/skakla.png}" alt="Skarbnik klasowy" >
+    </a>
 
+<!--        <p></p>-->
+<!--        <p>A tu do podglądu listy</p>-->
+<!--        <div class="p-6">-->
+<!--          <a class="h6" th:href="@{mvc/class}">Lista klas</a>-->
+<!--        </div>-->
+<!--        <div class="p-6">-->
+<!--            <a class="h6" th:href="@{mvc/user}">Lista użytkowników</a>-->
+<!--        </div>-->
+<!--        <div class="p-6">-->
+<!--            <a class="h6" th:href="@{mvc/child}">Lista uczniów</a>-->
+<!--        </div>-->
 
-    </body>
+    </div>
+    <div th:insert="fragments/footer/footer.html"></div>
+
+</body>
 </html>

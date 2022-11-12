@@ -15,6 +15,7 @@ public class ChildMapper {
                 .firstName(form.getFirstName())
                 .lastName(form.getLastName())
                 .schoolClass(form.getSchoolClass())
+                .isActive(form.getIsActive())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class ChildMapper {
                 .firstName(form.getFirstName())
                 .lastName(form.getLastName())
                 .schoolClass(form.getSchoolClass())
+                .isActive(form.getIsActive())
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +33,19 @@ public class TransactionController {
     private final CurrentSchoolClass currentSchoolClass;
 
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping
     public String getTransactionsList(ModelMap model) {
         model.addAttribute("transactions", transactionService.findAll());
         return "transactions";
     }
 
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/precreate/{type}")
     public String showPreCreateForm(@PathVariable("type") String type, ModelMap model) {
         TransactionPreCreationDto preForm = prepareTransactionPreCreationDto(type);
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
-
         return "create-transaction";
     }
 
@@ -58,6 +59,7 @@ public class TransactionController {
         return preForm;
     }
 
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
                                      ModelMap model) {
@@ -70,7 +72,7 @@ public class TransactionController {
 
     private TransactionCreationDto prepareTransactionCreationForm(TransactionPreCreationDto preForm) {
         TransactionCreationDto form = new TransactionCreationDto();
-        List<Child> childList = childService.findAllNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
+        List<Child> childList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
 
         for (int i=0; i< childList.size(); i++) {
             Transaction transaction = new Transaction();
@@ -97,7 +99,7 @@ public class TransactionController {
                 break;
         }
     }
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/create")
     public String create(@ModelAttribute TransactionPreCreationDto preForm,
                          @ModelAttribute TransactionCreationDto form, ModelMap model) {
@@ -107,7 +109,6 @@ public class TransactionController {
         transactionService.createAll(transactions);
         return "createdTransactions";
     }
-
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
         List<Transaction> preparedTransactionsList = null;
         switch (preForm.getSelectedOption()) {
@@ -175,36 +176,32 @@ public class TransactionController {
             roundingTransaction.setDescription(preForm.getDescription());
             roundingTransaction.setChild(childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId())));
             setTransactionType(preForm, roundingTransaction);
-//            Transaction roundingTransaction = new Transaction(,preForm.getDate(), rounding, preForm.getDescription(),null,
-//                    childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass)), null);
-//            setTransactionType(preForm, roundingTransaction);
-////                    to tu jest brzydko, jak to powiązać z zestawem transakcji i spowodować, że zapisze się całość lub nic?
             transactionService.create(roundingTransaction);
         }
     }
 
-
-    @GetMapping("/add")
-    public String showCreateFormClassSelection(ModelMap model) {
-        model.addAttribute("schoolClassList", schoolClassService.findAll());
-        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass.getId()));
-
-        return "create-transaction";
-    }
-
-    @GetMapping("/add/{schoolClass}")
-    public String showCreateForm(@PathVariable("schoolClass") SchoolClass schoolClass, ModelMap model) {
-        model.addAttribute("transaction", new CreateTransactionForm());
-        model.addAttribute("childList", childService.findAllBySchoolClass(schoolClass));
-
-
-        return "create-transaction";
-    }
-
-    //    @Secured("ROLE_ADMIN")
-    @PostMapping("/add")
-    public String create(@ModelAttribute("user") CreateTransactionForm form) {
-        transactionService.create(TransactionMapper.toEntity(form));
-        return "redirect:/mvc/user/add";
-    }
+//    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
+//    @GetMapping("/add")
+//    public String showCreateFormClassSelection(ModelMap model) {
+//        model.addAttribute("schoolClassList", schoolClassService.findAll());
+//        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass.getId()));
+//
+//        return "create-transaction";
+//    }
+//
+//    @GetMapping("/add/{schoolClass}")
+//    public String showCreateForm(@PathVariable("schoolClass") SchoolClass schoolClass, ModelMap model) {
+//        model.addAttribute("transaction", new CreateTransactionForm());
+//        model.addAttribute("childList", childService.findAllBySchoolClass(schoolClass));
+//
+//
+//        return "create-transaction";
+//    }
+//
+//    //    @Secured("ROLE_ADMIN")
+//    @PostMapping("/add")
+//    public String create(@ModelAttribute("user") CreateTransactionForm form) {
+//        transactionService.create(TransactionMapper.toEntity(form));
+//        return "redirect:/mvc/user/add";
+//    }
 }

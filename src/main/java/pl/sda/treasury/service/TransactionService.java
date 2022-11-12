@@ -92,9 +92,17 @@ public class TransactionService {
         return balance;
     }
     public List<BigDecimal> getListOfNonTechnicalBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllNonTechnicalBySchoolClass(schoolClass);
+        List<Child> childrenList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClass);
         List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllNonTechnicalBySchoolClass(schoolClass).size(); i++) {
+        for (int i = 0; i < childService.findAllActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
+            list.add(getBalanceForChild(childrenList.get(i).getId()));
+        }
+        return list;
+    }
+    public List<BigDecimal> getListOfNonActiveNonTechnicalBalancesForSchoolClass(SchoolClass schoolClass) {
+        List<Child> childrenList = childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass);
+        List<BigDecimal> list = new ArrayList<>();
+        for (int i = 0; i < childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
             list.add(getBalanceForChild(childrenList.get(i).getId()));
         }
         return list;
@@ -109,9 +117,18 @@ public class TransactionService {
     }
 
     public List<BigDecimal> getListOfNonTechnicalPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllNonTechnicalBySchoolClass(schoolClass);
+        List<Child> childrenList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClass);
         List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllNonTechnicalBySchoolClass(schoolClass).size(); i++) {
+        for (int i = 0; i < childService.findAllActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
+            list.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
+        }
+        return list;
+    }
+
+    public List<BigDecimal> getListOfNonActiveNonTechnicalPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
+        List<Child> childrenList = childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass);
+        List<BigDecimal> list = new ArrayList<>();
+        for (int i = 0; i < childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
             list.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
         }
         return list;

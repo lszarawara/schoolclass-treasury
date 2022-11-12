@@ -35,7 +35,7 @@
         <input type="password" th:field="*{password}" class="form-control" id="password">
       </div>
       <input sec:authorize="!hasRole('ROLE_ADMIN')" type="hidden" th:field="*{role}" class="form-control" id="role1">
-
+      <input sec:authorize="!hasRole('ROLE_ADMIN')" type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
       <div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group">
         <label for="role2" class="form-label">Rola:</label>
         <select class="form-control selectpicker" th:field="*{role}" id="role2">

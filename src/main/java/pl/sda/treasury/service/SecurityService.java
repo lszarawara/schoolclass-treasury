@@ -13,18 +13,22 @@ public class SecurityService {
 
     private final UserService userService;
     private final ChildService childService;
-    Logger logger = LoggerFactory.getLogger(SecurityService.class);
+//    Logger logger = LoggerFactory.getLogger(SecurityService.class);
     Authentication authentication;
 
     public boolean isParent(Long childId){
-
         this.authentication = SecurityContextHolder.getContext().getAuthentication();
-
-//        return authentication.getName().equals(user.getUserName()) || SecurityUtils.isAdmin();
-
         return userService.findByLogin(authentication.getName()).getChildren().contains(childService.find(childId));
-
-//        return userService.findByLogin(principal.getName()).getChildren().contains(childService.find(ChildId));
     }
+    public boolean isTreasurer(Long childId){
+        this.authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findByLogin(authentication.getName()).getSchoolClasses().contains(childService.find(childId).getSchoolClass());
+    }
+
+    public boolean isThisUser(Long id){
+        this.authentication = SecurityContextHolder.getContext().getAuthentication();
+        return userService.findByLogin(authentication.getName()).getId() == id;
+    }
+
 
 }

@@ -29,6 +29,9 @@ public class Child {
     private boolean isTechnical;
 
     @Setter
+    private Boolean isActive = true;
+
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schoolClass_id", nullable = false)
     private SchoolClass schoolClass;

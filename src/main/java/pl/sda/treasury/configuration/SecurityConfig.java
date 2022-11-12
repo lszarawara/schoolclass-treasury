@@ -10,13 +10,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import pl.sda.treasury.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceAdapter userDetailsServiceAdapter;
@@ -27,17 +28,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/mvc/user/add").permitAll()
                 .antMatchers("/mvc/**").authenticated()
-//                .antMatchers("/mvc/child/balance/" + userService.)
                 .and()
-                .formLogin()
-//                .loginPage("/login")
-                .permitAll()
-//                .successForwardUrl("/mvc/user/current")
-                .defaultSuccessUrl("/mvc/user/current")
+                    .formLogin()
+    //                .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/mvc/user/current")
                 .and()
-                .httpBasic()
+                    .httpBasic()
                 .and()
-                .logout()
+                    .logout()
 //                .and()
 //                .anyRequest()
 //                .authenticated()
@@ -55,6 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+//    @Bean
+//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+//        return new MySimpleUrlAuthenticationSuccessHandler();
+//    }
 }
 
 
