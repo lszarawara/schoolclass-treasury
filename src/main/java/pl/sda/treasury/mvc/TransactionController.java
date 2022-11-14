@@ -44,7 +44,7 @@ public class TransactionController {
         TransactionPreCreationDto preForm = prepareTransactionPreCreationDto(type);
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
-//        model.addAttribute("mailing", mailing);
+        model.addAttribute("mailing", "false");
         return "create-transaction";
     }
 
@@ -61,12 +61,12 @@ public class TransactionController {
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
-//                                     @ModelAttribute boolean mailing,
+                                     @ModelAttribute String mailing,
                                      ModelMap model) {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
-//            model.addAttribute("mailing", mailing);
+            model.addAttribute("mailing", mailing);
 
             return "create-transaction";
 
