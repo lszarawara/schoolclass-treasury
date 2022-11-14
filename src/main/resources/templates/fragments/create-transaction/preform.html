@@ -41,15 +41,15 @@
         <label class="custom-control-label" for="option2">Przypisz tą kwotę dla każdego z dzieci</label>
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="option3" name="option1" class="custom-control-input" value="3" th:field="*{selectedOption}">
+        <input type="radio" id="option3" name="option3" class="custom-control-input" value="3" th:field="*{selectedOption}">
         <label class="custom-control-label" for="option3">Podziel kwotę po równo na wybrane dzieci</label>
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="option4" name="option2" class="custom-control-input" value="4" th:field="*{selectedOption}">
+        <input type="radio" id="option4" name="option4" class="custom-control-input" value="4" th:field="*{selectedOption}">
         <label class="custom-control-label" for="option4">Przypisz tą kwotę wybranym dzieciom</label>
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="option5" name="option3" class="custom-control-input" value="5" th:field="*{selectedOption}">
+        <input type="radio" id="option5" name="option5" class="custom-control-input" value="5" th:field="*{selectedOption}">
         <label class="custom-control-label" for="option5">Swobodne przypisanie wydatków</label>
     </div>
 </div>
@@ -57,12 +57,19 @@
 <div th:if="${preForm.transactionType == 'due'}" class="form-group">
 
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="option2a" name="option2" class="custom-control-input" value="2" th:field="*{selectedOption}">
-        <label class="custom-control-label" for="option2">Przypisz tą kwotę jako składkę dla każdego z dzieci</label>
+        <input type="radio" id="option2a" name="option2a" class="custom-control-input" value="2" th:field="*{selectedOption}">
+        <label class="custom-control-label" for="option2a">Przypisz tą kwotę jako składkę dla każdego z dzieci</label>
     </div>
     <div class="custom-control custom-radio custom-control-inline">
-        <input type="radio" id="option6" name="option1" class="custom-control-input" value="6" th:field="*{selectedOption}">
-        <label class="custom-control-label" for="option3">Uzupełnij stan konta każdego dziecka do tej kwoty</label>
+        <input type="radio" id="option6" name="option6" class="custom-control-input" value="6" th:field="*{selectedOption}">
+        <label class="custom-control-label" for="option6">Uzupełnij stan konta każdego dziecka do tej kwoty</label>
+    </div>
+    <p></p>
+    <div>
+<!--        <input type="checkbox" class="custom-control-input" th:checked="${mailing} ? 'Y' : 'N'" />-->
+<!--        <input type="checkbox" class="custom-control-input" name="mailing" th:checked="${mailing}"  />-->
+<!--        <label class="custom-control-label"  name="mailing">Wyślij mailing o składce</label>-->
+
     </div>
 </div>
 

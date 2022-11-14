@@ -10,14 +10,13 @@ import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
-import pl.sda.treasury.service.ChildService;
-import pl.sda.treasury.service.SchoolClassService;
-import pl.sda.treasury.service.TransactionService;
-import pl.sda.treasury.service.UserService;
+import pl.sda.treasury.service.*;
 
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.awt.SystemColor.text;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ public class ChildController {
     private final SchoolClassService schoolClassService;
     private final TransactionService transactionService;
     private final UserService userService;
+    private final EmailServiceImpl emailService;
 
 
     @GetMapping()
@@ -90,7 +90,7 @@ public class ChildController {
                                @ModelAttribute("user") UpdateUserForm formU,
                                @ModelAttribute("existingUser") String userExists,
                                @PathVariable("id") Long id) {
-        if(formU.getId().describeConstable().isPresent()) {
+        if(userExists.equals("Y")) {
             try {
                 List<Child> newListOfChildren = formU.getChildren();
                 Child newChild = childService.find(id);
@@ -103,6 +103,7 @@ public class ChildController {
                 formU.setChildren(newListOfChildren);
             } finally {
                 userService.update(UserMapper.toEntity(formU));
+                prepareEmailMessage(null, formU, id, "AddChild" );
             }
         } else{
             List<Child> newListOfChildren = new ArrayList<>();
@@ -110,9 +111,39 @@ public class ChildController {
             newListOfChildren.add(newChild);
             formC.setChildren(newListOfChildren);
             userService.update(UserMapper.toEntity(formC));
+            prepareEmailMessage(formC, null, id, "Welcome" );
+
         }
         return "redirect:/mvc/class/" + childService.find(id).getSchoolClass().getId();
     }
+
+    private void prepareEmailMessage(CreateUserForm formC, UpdateUserForm formU,Long childId, String messageType) {
+        String to = null;
+        String subject = null;
+        String text = null;
+
+        switch (messageType) {
+            case "Welcome":
+                to = formC.getEmail();
+                subject = "Skarbnik Klasowy - utworzenie konta rodzica";
+                text = "Dzień Dobry!\n\n" + "Utworzono dla Ciebie konto rodzica dla dziecka "
+                        + childService.find(childId).getFirstName() + " " + childService.find(childId).getLastName() + " w klasie " + childService.find(childId).getSchoolClass().getName() + ".\n\n"
+                        + "Zaloguje się w serwisie skarbnikklasowy.pl na Twoje konto i zmień hasło.\n"
+                        + "Twój login: " + formC.getLogin()
+                        + "Twoje tymczasowe hasło: " + formC.getPassword()
+                        + "\nPozdrawiamy\nSkarbnik Klasowy";
+                break;
+            case "AddChild":
+                to = formU.getEmail();
+                subject = "Skarbnik Klasowy - dodanie dziecka do konta rodzica";
+                text = "Dzień Dobry!\n\n" + "Do Twojego konta dodano dziecko: "
+                        + childService.find(childId).getFirstName() + " " + childService.find(childId).getLastName() + " w klasie " + childService.find(childId).getSchoolClass().getName() + ".\n"
+                        + "\nPozdrawiamy\nSkarbnik Klasowy";
+                break;
+        }
+        emailService.sendSimpleMessage(to, subject, text);
+    }
+
 
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@
 <input type="hidden" th:field="${preForm.amount}" class="form-control" id="amount">
 <input type="hidden" th:field="${preForm.date}" class="form-control" id="date">
 <input type="hidden" th:field="${preForm.description}" class="form-control" id="description">
+<!--<input type="hidden" th:field="${mailing}" class="form-control" id="mailing">-->
 
 <div class="mb-3">
     <p th:text="'Opis transakcji: ' + ${preForm.description}"></p>
@@ -19,7 +20,6 @@
     <p th:text="'Kwota do przypisania: ' + ${#numbers.formatDecimal(preForm.amount, 0, 'WHITESPACE', 2, 'COMMA')}"></p>
 </div>
 <div th:if="${preForm.selectedOption == '6'}" class="mb-3">
-<!--    <p th:text="'Po składce dzieci mają osiągnąć saldo: ' + ${preForm.amount}" type="number" step=".01"></p>-->
     <p th:text="'Po składce dzieci mają osiągnąć saldo: ' + ${#numbers.formatDecimal(preForm.amount, 0, 'WHITESPACE', 2, 'COMMA')}" type="number" step=".01"></p>
 </div>
 

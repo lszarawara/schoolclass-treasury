@@ -10,11 +10,9 @@ import pl.sda.treasury.dto.TransactionPreCreationDto;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
+import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.TransactionMapper;
-import pl.sda.treasury.service.ChildService;
-import pl.sda.treasury.service.CurrentSchoolClass;
-import pl.sda.treasury.service.SchoolClassService;
-import pl.sda.treasury.service.TransactionService;
+import pl.sda.treasury.service.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,7 +29,7 @@ public class TransactionController {
     private final ChildService childService;
     private final SchoolClassService schoolClassService;
     private final CurrentSchoolClass currentSchoolClass;
-
+    private final EmailServiceImpl emailService;
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping
@@ -46,6 +44,7 @@ public class TransactionController {
         TransactionPreCreationDto preForm = prepareTransactionPreCreationDto(type);
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
+//        model.addAttribute("mailing", mailing);
         return "create-transaction";
     }
 
@@ -62,10 +61,13 @@ public class TransactionController {
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
+//                                     @ModelAttribute boolean mailing,
                                      ModelMap model) {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
+//            model.addAttribute("mailing", mailing);
+
             return "create-transaction";
 
     }
@@ -102,11 +104,16 @@ public class TransactionController {
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/create")
     public String create(@ModelAttribute TransactionPreCreationDto preForm,
-                         @ModelAttribute TransactionCreationDto form, ModelMap model) {
+                         @ModelAttribute TransactionCreationDto form,
+//                         @ModelAttribute String mailing,
+                         ModelMap model) {
 
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
+//        if (mailing.equals("true")) prepareEmailMessage(transactions);
+        if (preForm.getTransactionType().equals("due")) prepareEmailMessage(transactions);
+
         return "createdTransactions";
     }
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
@@ -179,29 +186,20 @@ public class TransactionController {
             transactionService.create(roundingTransaction);
         }
     }
+    private void prepareEmailMessage(List<Transaction> transactions) {
 
-//    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
-//    @GetMapping("/add")
-//    public String showCreateFormClassSelection(ModelMap model) {
-//        model.addAttribute("schoolClassList", schoolClassService.findAll());
-//        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass.getId()));
-//
-//        return "create-transaction";
-//    }
-//
-//    @GetMapping("/add/{schoolClass}")
-//    public String showCreateForm(@PathVariable("schoolClass") SchoolClass schoolClass, ModelMap model) {
-//        model.addAttribute("transaction", new CreateTransactionForm());
-//        model.addAttribute("childList", childService.findAllBySchoolClass(schoolClass));
-//
-//
-//        return "create-transaction";
-//    }
-//
-//    //    @Secured("ROLE_ADMIN")
-//    @PostMapping("/add")
-//    public String create(@ModelAttribute("user") CreateTransactionForm form) {
-//        transactionService.create(TransactionMapper.toEntity(form));
-//        return "redirect:/mvc/user/add";
-//    }
+        for (Transaction transaction : transactions) {
+            for (User parent : transaction.getChild().getParents()) {
+                String to = parent.getEmail();
+                String subject = "Skarbnik Klasowy - nowa składka";
+                String text = "Dzień Dobry!\n\n" + "Proszę o dokonanie wpłaty dla dziecka "
+                        + childService.find(transaction.getChild().getId()).getFirstName() + " " + childService.find(transaction.getChild().getId()).getLastName()
+                        + " w klasie " + childService.find(transaction.getChild().getId()).getSchoolClass().getName() + ".\n"
+                        + "Tytuł wpłaty składki: " + transaction.getDescription() + " - " + childService.find(transaction.getChild().getId()).getFirstName() + " " + childService.find(transaction.getChild().getId()).getLastName()+ ".\n"
+                        + "Kwota: " + transaction.getAmount() + " zł.\n"
+                        + "\n\nPozdrawiamy\nSkarbnik Klasowy";
+                emailService.sendSimpleMessage(to, subject, text);
+            }
+        }
+    }
 }

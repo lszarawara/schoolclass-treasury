@@ -15,14 +15,13 @@
 
 
   <form th:if="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
-<!--Odkomentowany następny wiersz-->
       <input type="hidden" th:field="*{id}" class="form-control" id="id">
       <input type="hidden" th:field="*{schoolClasses}" class="form-control" id="schoolClasses">
       <input type="hidden" th:field="*{children}" class="form-control" id="children">
       <input type="hidden" th:field="*{password}" class="form-control" id="password">
       <input type="hidden" th:field="*{login}" class="form-control" id="login">
       <input type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
-      <input type="hidden" th:object="${existingUser}" th:value="Y" class="form-control" id="existingUser">
+      <input type="hidden" name="existingUser" th:value="Y" class="form-control" id="existingUser">
 
       <div class="mb-3">
         <label for="firstName" class="form-label">Imię:</label>
@@ -55,7 +54,8 @@
 
     <form th:unless="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${parent}">
 
-        <input type="hidden" th:object="${existingUser}" th:value="N" class="form-control" id="existingUser2">
+<!--        <input type="hidden" th:object="${existingUser}" th:value="N" class="form-control" id="existingUser2">-->
+        <input type="hidden" name="existingUser" th:value="N" class="form-control" id="existingUser">
 
         <div class="mb-3">
             <label for="firstName2" class="form-label">Imię:</label>
