@@ -20,6 +20,18 @@
     <p th:text="'Nazwa: ' + ${schoolClass.getName()}"></p>
     <p th:text="'Aktualne saldo środków pieniężnych: ' + ${#numbers.formatDecimal(schoolClassBalance, 1, 'WHITESPACE', 2, 'COMMA')}"></p>
     <p th:text="'Aktualne saldo wpłat: ' + ${#numbers.formatDecimal(schoolClassPaymentBalance, 1, 'WHITESPACE', 2, 'COMMA')}"></p>
+
+      <div class="nav-link px-2 link-dark dropdown">
+        <button class="btn btn-primary dropdown-toggle m-2 px-2 py-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dodaj transakcję
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" th:href="@{/mvc/transaction/precreate/due}">Dodaj nową składkę</a>
+          <a class="dropdown-item" th:href="@{/mvc/transaction/precreate/pay}">Dodaj wpłaty na konta uczniów</a>
+          <a class="dropdown-item" th:href="@{/mvc/transaction/precreate/deb}">wydatki na konta uczniów</a>
+        </div>
+      </div>
+
     </div>
 
 <div class="row border border-primary" style="padding: 20px; margin: 10px; ">
@@ -107,6 +119,7 @@
     <p>Nie masz jeszcze żadnego ucznia na liście w tej klasie</p>
     <a class="btn btn-primary" th:href="${'/mvc/child/add?schoolClassId=' + schoolClass.id}" role="button">Dodaj pierwszego ucznia</a>
   </div>
+
 
   <div class="row border border-primary" style="padding: 20px; margin: 10px; ">
     <h4>Transakcje</h4>

@@ -17,8 +17,18 @@
 
       <div class="mb-3">
         <label for="email" class="form-label">Podaj email rodzica:</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email">
+        <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+               id="email" aria-describedby="validationServerEmailFeedback">
+<!--        class="invalid-feedback"-->
+        <div id="validationServerEmailFeedback"
+             class="invalid-feedback"
+             th:if="${#fields.hasErrors('email')}"
+             th:text="${#fields.errors('email')}">
+          Wprowadź adres email.
+        </div>
+
       </div>
+
     <p></p>
 
       <button type="submit" class="btn btn-primary">Sprawdź email</button>

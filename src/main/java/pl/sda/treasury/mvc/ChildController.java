@@ -5,6 +5,8 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.User;
@@ -12,6 +14,7 @@ import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +67,13 @@ public class ChildController {
 
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/{id}/checkparent")
-    public String showForm(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id, ModelMap model) {
-//    public String showForm(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") String id, ModelMap model) {
-//        tu nie działa Lang w Model Attribute
+    public String showForm(@ModelAttribute("parent") @Valid CreateUserForm form, BindingResult errors, @PathVariable("id") Long id, ModelMap model) { //Errors errors
 
+//        if (errors.hasErrors('email')) {
+//            model.addAttribute("parent", form);
+//            model.addAttribute("childId", String.valueOf(id));
+//            return "precreate-parent";
+//        }
         try {
             model.addAttribute("user", userService.findByEmail(form.getEmail()));
             model.addAttribute("existingUser", "Y");
@@ -129,7 +135,7 @@ public class ChildController {
                 text = "Dzień Dobry!\n\n" + "Utworzono dla Ciebie konto rodzica dla dziecka "
                         + childService.find(childId).getFirstName() + " " + childService.find(childId).getLastName() + " w klasie " + childService.find(childId).getSchoolClass().getName() + ".\n\n"
                         + "Zaloguje się w serwisie skarbnikklasowy.pl na Twoje konto i zmień hasło.\n"
-                        + "Twój login: " + formC.getLogin()
+                        + "Twój login: " + formC.getLogin() + "\n"
                         + "Twoje tymczasowe hasło: " + formC.getPassword()
                         + "\nPozdrawiamy\nSkarbnik Klasowy";
                 break;
