@@ -69,11 +69,12 @@ public class ChildController {
     @PostMapping("/{id}/checkparent")
     public String showForm(@ModelAttribute("parent") @Valid CreateUserForm form, BindingResult errors, @PathVariable("id") Long id, ModelMap model) { //Errors errors
 
-//        if (errors.hasErrors('email')) {
-//            model.addAttribute("parent", form);
-//            model.addAttribute("childId", String.valueOf(id));
-//            return "precreate-parent";
-//        }
+        if (errors.hasFieldErrors("email")) {
+            model.addAttribute("parent", form);
+            model.addAttribute("childId", String.valueOf(id));
+            errors.
+            return "precreate-parent";
+        }
         try {
             model.addAttribute("user", userService.findByEmail(form.getEmail()));
             model.addAttribute("existingUser", "Y");
@@ -92,10 +93,19 @@ public class ChildController {
     }
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/parent/{id}")
-    public String createParent(@ModelAttribute("parent") CreateUserForm formC,
+    public String createParent(@ModelAttribute("parent") @Valid CreateUserForm formC, BindingResult errors,
                                @ModelAttribute("user") UpdateUserForm formU,
                                @ModelAttribute("existingUser") String userExists,
-                               @PathVariable("id") Long id) {
+                               @PathVariable("id") Long id, ModelMap model) {
+        if (errors.hasErrors()) {
+            model.addAttribute("parent", formC);
+            model.addAttribute("user", formU);
+            model.addAttribute("existingUser", userExists);
+            model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+            model.addAttribute("childId", String.valueOf(id));
+            return "/{id}/checkparent";
+        }
+
         if(userExists.equals("Y")) {
             try {
                 List<Child> newListOfChildren = formU.getChildren();

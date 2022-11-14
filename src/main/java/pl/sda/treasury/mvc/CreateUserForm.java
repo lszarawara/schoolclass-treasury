@@ -9,9 +9,9 @@ import java.util.List;
 
 @Data
 public class CreateUserForm {
-//    @NotEmpty(message = "Proszę podać imię")
+    @NotEmpty(message = "Proszę podać imię")
     private String firstName;
-//    @NotEmpty(message = "Proszę podać nazwisko")
+    @NotEmpty(message = "Proszę podać nazwisko")
     private String lastName;
     @Email
     @NotEmpty(message = "Proszę podać email")
