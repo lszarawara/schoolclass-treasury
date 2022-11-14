@@ -3,7 +3,7 @@
 <input type="hidden" th:field="${preForm.amount}" class="form-control" id="amount">
 <input type="hidden" th:field="${preForm.date}" class="form-control" id="date">
 <input type="hidden" th:field="${preForm.description}" class="form-control" id="description">
-<!--<input type="hidden" th:field="${mailing}" class="form-control" id="mailing">-->
+<input type="hidden" name="mailing" th:value="${mailing}" class="form-control" id="mailing">
 
 <div class="mb-3">
     <p th:text="'Opis transakcji: ' + ${preForm.description}"></p>

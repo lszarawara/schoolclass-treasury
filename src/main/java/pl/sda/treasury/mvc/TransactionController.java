@@ -61,7 +61,7 @@ public class TransactionController {
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
-                                     @ModelAttribute String mailing,
+                                     @RequestParam String mailing,
                                      ModelMap model) {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
@@ -105,15 +105,14 @@ public class TransactionController {
     @PostMapping("/create")
     public String create(@ModelAttribute TransactionPreCreationDto preForm,
                          @ModelAttribute TransactionCreationDto form,
-//                         @ModelAttribute String mailing,
+                         @RequestParam String mailing,
                          ModelMap model) {
 
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
-//        if (mailing.equals("true")) prepareEmailMessage(transactions);
-        if (preForm.getTransactionType().equals("due")) prepareEmailMessage(transactions);
-
+        if (mailing.equals("on")) prepareEmailMessage(transactions);
+//        if (preForm.getTransactionType().equals("due")) prepareEmailMessage(transactions);
         return "createdTransactions";
     }
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
