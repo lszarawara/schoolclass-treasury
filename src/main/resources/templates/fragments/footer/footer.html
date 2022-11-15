@@ -3,14 +3,5 @@
         <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
             <img height="64" th:cellpadding="20" th:src="@{/images/skakla.png}" alt="Skarbnik klasowy" >
         </a>
-
-        <!--        Testowe -->
-        <div sec:authorize="isAuthenticated()">
-            <div class="d-flex flex-column justify-content-center align-items-end">
-                <div> Authenticated username: <span sec:authentication="name"></span></div>
-                <div> Authenticated user roles: <span sec:authentication="principal.authorities"></span></div>
-            </div>
-
-        </div>
     </footer>
 </div>

@@ -15,26 +15,62 @@
   <form th:method="post" th:action="@{/mvc/user/update}" th:object="${user}">
       <input type="hidden" th:field="*{id}" class="form-control" id="id">
       <input type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
+
       <div class="mb-3">
-        <label for="firstName" class="form-label">Imię:</label>
-        <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
+          <label for="firstName2" class="form-label">Imię:</label>
+          <input type="text" th:field="*{firstName}" th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                 id="firstName2" aria-describedby="validationServerFirstNameFeedback">
+          <div id="validationServerFirstNameFeedback"
+               class="invalid-feedback"
+               th:if="${#fields.hasErrors('firstName')}"
+               th:text="${#fields.errors('firstName').get(0)}">
+          </div>
       </div>
+
       <div class="mb-3">
-        <label for="lastName" class="form-label">Nazwisko:</label>
-        <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
+          <label for="lastName2" class="form-label">Nazwisko:</label>
+          <input type="text" th:field="*{lastName}" th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                 id="lastName2" aria-describedby="validationServerLastNameFeedback">
+          <div id="validationServerLastNameFeedback"
+               class="invalid-feedback"
+               th:if="${#fields.hasErrors('lastName')}"
+               th:text="${#fields.errors('lastName').get(0)}">
+          </div>
       </div>
+
       <div class="mb-3">
-        <label for="email" class="form-label">Email:</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email">
+          <label for="email" class="form-label">Podaj email rodzica:</label>
+          <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+                 id="email" aria-describedby="validationServerEmailFeedback">
+          <div id="validationServerEmailFeedback"
+               class="invalid-feedback"
+               th:if="${#fields.hasErrors('email')}"
+               th:text="${#fields.errors('email').get(0)}">
+          </div>
       </div>
+
       <div class="mb-3">
-        <label for="login" class="form-label">Login:</label>
-        <input type="text" th:field="*{login}" class="form-control" id="login">
+          <label for="login2" class="form-label">Login:</label>
+          <input type="text" th:field="*{login}" th:class="${#fields.hasErrors('login')} ? 'form-control is-invalid' : 'form-control'"
+                 id="login2" aria-describedby="validationServerLoginFeedback">
+          <div id="validationServerLoginFeedback"
+               class="invalid-feedback"
+               th:if="${#fields.hasErrors('login')}"
+               th:text="${#fields.errors('login').get(0)}">
+          </div>
       </div>
+
       <div class="mb-3">
-        <label for="password" class="form-label">Hasło:</label>
-        <input type="password" th:field="*{password}" class="form-control" id="password">
+          <label for="password2" class="form-label">Hasło:</label>
+          <input type="password" th:field="*{password}" th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                 id="password2" aria-describedby="validationServerPasswordFeedback">
+          <div id="validationServerPasswordFeedback"
+               class="invalid-feedback"
+               th:if="${#fields.hasErrors('password')}"
+               th:text="${#fields.errors('password').get(0)}">
+          </div>
       </div>
+
       <div class="form-group">
         <label for="role" class="form-label">Rola:</label>
         <select class="form-control selectpicker" th:field="*{role}" id="role">

@@ -5,8 +5,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.User;
@@ -72,19 +74,38 @@ public class ChildController {
         if (errors.hasFieldErrors("email")) {
             model.addAttribute("parent", form);
             model.addAttribute("childId", String.valueOf(id));
-            errors.
+
+//            if(errors.hasErrors() )
+//            {
+//                BeanPropertyBindingResult result2 = new BeanPropertyBindingResult( form, theBindingResult.getObjectName() );
+//                for( ObjectError error : theBindingResult.getGlobalErrors() )
+//                {
+//                    result2.addError( error );
+//                }
+//                for( FieldError error : theBindingResult.getFieldErrors() )
+//                {
+//                    result2.addError( new FieldError( error.getObjectName(), error.getField(), null, error.isBindingFailure(), error.getCodes(), error.getArguments(), error.getDefaultMessage() ) );
+//                }
+//                model.addAllAttributes( result2.getModel() );
+//                return "mng-dir-add";
+//            }
+
+
             return "precreate-parent";
         }
+        CreateUserForm form2 = new CreateUserForm();
+        form2.setEmail(form.getEmail());
+
         try {
-            model.addAttribute("user", userService.findByEmail(form.getEmail()));
+            model.addAttribute("user", userService.findByEmail(form2.getEmail()));
             model.addAttribute("existingUser", "Y");
-            if (userService.findByEmail(form.getEmail()).getChildren().contains(childService.find(id))) {
+            if (userService.findByEmail(form2.getEmail()).getChildren().contains(childService.find(id))) {
                 model.addAttribute("parentAlreadyAdded", true);
                 model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());}
             } catch (RuntimeException e){
-            form.setRole(String.valueOf(User.Role.ROLE_USER));
-            form.setIsEnabled(false);
-            model.addAttribute("parent", form);
+            form2.setRole(String.valueOf(User.Role.ROLE_USER));
+            form2.setIsEnabled(false);
+            model.addAttribute("parent", form2);
             model.addAttribute("existingUser", "N");
         } finally {
             model.addAttribute("childId", id);
@@ -103,7 +124,7 @@ public class ChildController {
             model.addAttribute("existingUser", userExists);
             model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
             model.addAttribute("childId", String.valueOf(id));
-            return "/{id}/checkparent";
+            return "create-parent";
         }
 
         if(userExists.equals("Y")) {
