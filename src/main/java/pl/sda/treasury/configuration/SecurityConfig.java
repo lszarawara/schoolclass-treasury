@@ -41,7 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest()
 //                .authenticated()
                 .and()
-                .csrf().disable();
+                .headers()
+                .frameOptions().disable()
+                .and()
+                .csrf().disable()
+
+        ;
     }
 
     @Override

@@ -5,13 +5,11 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.treasury.dto.TransactionCreationDto;
-import pl.sda.treasury.dto.TransactionPreCreationDto;
+import pl.sda.treasury.entity.dto.TransactionCreationDto;
+import pl.sda.treasury.entity.dto.TransactionPreCreationDto;
 import pl.sda.treasury.entity.Child;
-import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.entity.User;
-import pl.sda.treasury.mapper.TransactionMapper;
 import pl.sda.treasury.service.*;
 
 import java.math.BigDecimal;
@@ -61,7 +59,7 @@ public class TransactionController {
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
-                                     @RequestParam String mailing,
+                                     @RequestParam (required = false) String mailing,
                                      ModelMap model) {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
@@ -105,13 +103,13 @@ public class TransactionController {
     @PostMapping("/create")
     public String create(@ModelAttribute TransactionPreCreationDto preForm,
                          @ModelAttribute TransactionCreationDto form,
-                         @RequestParam String mailing,
+                         @RequestParam (required = false) String mailing,
                          ModelMap model) {
 
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
-        if (mailing.equals("on")) prepareEmailMessage(transactions);
+        if (("on").equals(mailing)) prepareEmailMessage(transactions);
 //        if (preForm.getTransactionType().equals("due")) prepareEmailMessage(transactions);
 
         return "createdTransactions";

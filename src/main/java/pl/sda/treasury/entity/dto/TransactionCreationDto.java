@@ -1,4 +1,4 @@
-package pl.sda.treasury.dto;
+package pl.sda.treasury.entity.dto;
 
 import lombok.*;
 import pl.sda.treasury.entity.Transaction;
