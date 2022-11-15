@@ -42,7 +42,7 @@ public class TransactionController {
         TransactionPreCreationDto preForm = prepareTransactionPreCreationDto(type);
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
-//        model.addAttribute("mailing", mailing);
+        model.addAttribute("mailing", false);
         return "create-transaction";
     }
 
@@ -64,7 +64,7 @@ public class TransactionController {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
-            model.addAttribute("mailing", mailing);
+            model.addAttribute("mailing", mailing);//mailing != null);
 
             return "create-transaction";
 
@@ -110,7 +110,6 @@ public class TransactionController {
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
         if (("on").equals(mailing)) prepareEmailMessage(transactions);
-//        if (preForm.getTransactionType().equals("due")) prepareEmailMessage(transactions);
 
         return "createdTransactions";
     }
