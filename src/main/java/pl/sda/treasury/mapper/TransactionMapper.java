@@ -16,16 +16,4 @@ public class TransactionMapper {
                 .type(Transaction.Type.valueOf(form.getType()))
                 .build();
     }
-
-//    public static User toEntity(UpdateUserForm form) {
-//        return User.builder()
-//                .id(form.getId())
-//                .firstName(form.getFirstName())
-//                .lastName(form.getLastName())
-//                .email(form.getEmail())
-//                .login(form.getLogin())
-//                .password(form.getPassword())
-//                .role(User.Role.valueOf(form.getRole()))
-//                .build();
-//    }
 }

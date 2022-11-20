@@ -1,4 +1,4 @@
-package pl.sda.treasury.entity.dto;
+package pl.sda.treasury.mapper.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
