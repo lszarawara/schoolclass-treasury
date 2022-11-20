@@ -13,11 +13,12 @@ INSERT INTO `school_class` VALUES
 INSERT INTO `child` VALUES
     (1,'techniczne', TRUE, TRUE, 'konto zaokrągleń',1),
     (2,'techniczne', TRUE, TRUE, 'konto zaokrągleń',2),
-    (3,'Adam', TRUE, FALSE, 'Abackij',1),
+    (3,'techniczne', TRUE, TRUE, 'konto zaokrągleń',3),
     (4,'Benek', TRUE, FALSE, 'Barnaba',1),
     (5,'Celina', TRUE, FALSE, 'Cośka',1),
     (6,'Daniel', FALSE, FALSE, 'Darko',1),
-    (7,'Edek', TRUE, FALSE, 'Enotko',2);
+    (7,'Edek', TRUE, FALSE, 'Enotko',2),
+    (8,'Adam', TRUE, FALSE, 'Abackij',1);
 
 INSERT INTO `transaction` VALUES
     (1,100.00,'2022-11-01','Składka',NULL,'DUE',3),
