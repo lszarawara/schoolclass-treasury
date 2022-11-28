@@ -43,7 +43,6 @@ public class UserService {
         user.setPassword(encodePassword(user.getPassword()));
         return repository.save(user);
     }
-//patch???
 
     public void delete(long id) {
         repository.deleteById(id);

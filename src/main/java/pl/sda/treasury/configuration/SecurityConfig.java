@@ -9,11 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import pl.sda.treasury.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,22 +25,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/mvc/**").authenticated()
                 .and()
                     .formLogin()
-    //                .loginPage("/login")
                     .permitAll()
                     .defaultSuccessUrl("/mvc/user/current")
                 .and()
                     .httpBasic()
                 .and()
                     .logout()
-//                .and()
-//                .anyRequest()
-//                .authenticated()
                 .and()
                 .headers()
                 .frameOptions().disable()
                 .and()
                 .csrf().disable()
-
         ;
     }
 
@@ -58,11 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-//    @Bean
-//    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
-//        return new MySimpleUrlAuthenticationSuccessHandler();
-//    }
 }
 
 

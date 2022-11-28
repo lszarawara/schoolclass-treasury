@@ -2,7 +2,6 @@ package pl.sda.treasury.mvc;
 
 import lombok.Data;
 import pl.sda.treasury.entity.Child;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;

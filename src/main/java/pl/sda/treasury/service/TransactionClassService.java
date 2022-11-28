@@ -2,11 +2,8 @@ package pl.sda.treasury.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
-import pl.sda.treasury.repository.SchoolClassRepository;
 import pl.sda.treasury.repository.TransactionRepository;
-
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -33,7 +30,6 @@ public class TransactionClassService {
     public Transaction update(Transaction transaction) {
         return repository.save(transaction);
     }
-//patch???
 
     public void delete(long id) {
         repository.deleteById(id);

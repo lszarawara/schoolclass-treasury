@@ -15,7 +15,6 @@ import java.util.stream.StreamSupport;
 @RequiredArgsConstructor
 public class ChildService {
     private final ChildRepository repository;
-//    private final PasswordEncoder passwordEncoder; //po security
 
     public Child find(long id) {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Child with id=" + id + " not found"));
@@ -32,7 +31,6 @@ public class ChildService {
                 .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
                 .filter(child -> child.getSchoolClass().equals(schoolClass))
                 .collect(Collectors.toList());
-//        return repository.findAllBySchoolClass(schoolClass, Sort.by("firstName").and(Sort.by("lastName")));
     }
 
     public List<Child> findAllActiveNonTechnicalBySchoolClass(SchoolClass schoolClass) {
@@ -76,7 +74,6 @@ public class ChildService {
     public Child update(Child child) {
         return repository.save(child);
     }
-//patch???
 
     public void delete(long id) {
         repository.deleteById(id);

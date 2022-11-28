@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Builder
@@ -52,13 +51,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "child_id"))
     List<Child> children = new ArrayList<>();
 
-
-
-
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     List<SchoolClass> schoolClasses;
-
 
     public static enum Role {
         ROLE_ADMIN("Admin"),

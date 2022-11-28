@@ -18,9 +18,6 @@
             </h2>
 
             <div th:unless="${isPredefined}" th:include="fragments/create-transaction/preform.html"></div>
-<!--            <form th:unless="${isPredefined}" th:action="@{/mvc/transaction/precreate}" th:object="${preForm}"-->
-<!--                  method="post" th:include="fragments/create-transaction/preform.html">-->
-<!--            </form>-->
 
             <form th:if="${isPredefined}" th:action="@{/mvc/transaction/create}" th:object="${form}"
                   method="post" th:include="fragments/create-transaction/main-step.html">

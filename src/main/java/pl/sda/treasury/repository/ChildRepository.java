@@ -8,6 +8,4 @@ import pl.sda.treasury.entity.SchoolClass;
 import java.util.List;
 
 public interface ChildRepository extends PagingAndSortingRepository<Child, Long> {
-
-//    List<Child> findAllBySchoolClass(SchoolClass schoolClass, Sort sort);
 }

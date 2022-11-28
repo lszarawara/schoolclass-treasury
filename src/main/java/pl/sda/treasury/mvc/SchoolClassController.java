@@ -1,6 +1,9 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -9,8 +12,8 @@ import org.springframework.web.context.annotation.SessionScope;
 import pl.sda.treasury.mapper.SchoolClassMapper;
 import pl.sda.treasury.service.*;
 
-
 @Controller
+@Slf4j
 @SessionScope
 @RequiredArgsConstructor
 @RequestMapping("/mvc/class")
@@ -19,9 +22,7 @@ public class SchoolClassController {
     private final UserService userService;
     private final ChildService childService;
     private final TransactionService transactionService;
-
     private final CurrentSchoolClass currentSchoolClass;
-
 
     @Secured("ROLE_SUPERUSER")
     @GetMapping("/add")
@@ -38,7 +39,6 @@ public class SchoolClassController {
         schoolClassService.create(SchoolClassMapper.toEntity(form));
         schoolClassService.findLastId();
         childService.createTechnicalAccountForSchoolClass(schoolClassService.findLastId());
-//        return "redirect:/mvc/user/" + form.getUser().getId();
         return "redirect:/mvc/user/current";
     }
 
@@ -60,7 +60,7 @@ public class SchoolClassController {
     }
     @Secured({"ROLE_ADMIN"})
     @GetMapping()
-         public String getSchoolClassesList(ModelMap model) {
+        public String getSchoolClassesList(ModelMap model) {
         model.addAttribute("schoolClasses", schoolClassService.findAll());
         return "classes";
     }

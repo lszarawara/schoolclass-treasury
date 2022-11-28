@@ -2,9 +2,7 @@ package pl.sda.treasury.mapper;
 
 import org.springframework.stereotype.Component;
 import pl.sda.treasury.entity.Child;
-import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mvc.CreateChildForm;
-import pl.sda.treasury.mvc.CreateUserForm;
 import pl.sda.treasury.mvc.UpdateChildForm;
 
 @Component

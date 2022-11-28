@@ -30,9 +30,6 @@ public class UserDetailsAdapter implements UserDetails {
     public String getUsername() {
         return user.getLogin();
     }
-//    public String getUsername() {
-//        return user.getLogin();
-//    }
 
     @Override
     public boolean isAccountNonExpired() {

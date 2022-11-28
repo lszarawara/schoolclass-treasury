@@ -5,23 +5,16 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.*;
-
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.awt.SystemColor.text;
 
 @Controller
 @RequiredArgsConstructor
@@ -46,10 +39,6 @@ public class ChildController {
         CreateChildForm form = new CreateChildForm();
         form.setSchoolClass(schoolClassService.find(schoolClassId));
         model.addAttribute("child", form);
-
-        // todo: Do decyzji czy zostawiamy dla Admina
-        //        model.addAttribute("schoolClassList", schoolClassService.findAll());
-
         return "create-child";
     }
 
@@ -74,23 +63,6 @@ public class ChildController {
         if (errors.hasFieldErrors("email")) {
             model.addAttribute("parent", form);
             model.addAttribute("childId", String.valueOf(id));
-
-//            if(errors.hasErrors() )
-//            {
-//                BeanPropertyBindingResult result2 = new BeanPropertyBindingResult( form, theBindingResult.getObjectName() );
-//                for( ObjectError error : theBindingResult.getGlobalErrors() )
-//                {
-//                    result2.addError( error );
-//                }
-//                for( FieldError error : theBindingResult.getFieldErrors() )
-//                {
-//                    result2.addError( new FieldError( error.getObjectName(), error.getField(), null, error.isBindingFailure(), error.getCodes(), error.getArguments(), error.getDefaultMessage() ) );
-//                }
-//                model.addAllAttributes( result2.getModel() );
-//                return "mng-dir-add";
-//            }
-
-
             return "precreate-parent";
         }
         CreateUserForm form2 = new CreateUserForm();
@@ -126,7 +98,6 @@ public class ChildController {
             model.addAttribute("childId", String.valueOf(id));
             return "create-parent";
         }
-
         if(userExists.equals("Y")) {
             try {
                 List<Child> newListOfChildren = formU.getChildren();
@@ -149,7 +120,6 @@ public class ChildController {
             formC.setChildren(newListOfChildren);
             userService.update(UserMapper.toEntity(formC));
             prepareEmailMessage(formC, null, id, "Welcome" );
-
         }
         return "redirect:/mvc/class/" + childService.find(id).getSchoolClass().getId();
     }
@@ -158,7 +128,6 @@ public class ChildController {
         String to = null;
         String subject = null;
         String text = null;
-
         switch (messageType) {
             case "Welcome":
                 to = formC.getEmail();
@@ -180,7 +149,6 @@ public class ChildController {
         }
         emailService.sendSimpleMessage(to, subject, text);
     }
-
 
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
@@ -213,5 +181,4 @@ public class ChildController {
         model.addAttribute("sumDebit", transactionService.getDebitSumForChildren(id));
         return "transactionsByChild";
     }
-
 }

@@ -11,7 +11,6 @@ import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.service.*;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -65,15 +64,12 @@ public class TransactionController {
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
             model.addAttribute("mailing", mailing);//mailing != null);
-
             return "create-transaction";
-
     }
 
     private TransactionCreationDto prepareTransactionCreationForm(TransactionPreCreationDto preForm) {
         TransactionCreationDto form = new TransactionCreationDto();
         List<Child> childList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
-
         for (int i=0; i< childList.size(); i++) {
             Transaction transaction = new Transaction();
             transaction.setChild(childList.get(i));
@@ -105,7 +101,6 @@ public class TransactionController {
                          @ModelAttribute TransactionCreationDto form,
                          @RequestParam (required = false) String mailing,
                          ModelMap model) {
-
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
@@ -116,7 +111,6 @@ public class TransactionController {
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
         List<Transaction> preparedTransactionsList = null;
         switch (preForm.getSelectedOption()) {
-
             case "1":
                 int childrenNumber1 = form.getTransactions().size();
                 BigDecimal amountToDebit1 = preForm.getAmount().divide(new BigDecimal(childrenNumber1), 2, RoundingMode.HALF_EVEN);
@@ -153,7 +147,6 @@ public class TransactionController {
                         .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
                         .collect(Collectors.toList());
                 break;
-
             case "6":
                 preparedTransactionsList = form.getTransactions()
                         .stream()
@@ -161,7 +154,6 @@ public class TransactionController {
                                 .subtract(transactionService.getBalanceForChild(transaction.getChild().getId()))); return transaction;})
                         .collect(Collectors.toList());
                 break;
-
             default: //CASE 0, 5
                 preparedTransactionsList = form.getTransactions()
                         .stream()
@@ -184,7 +176,6 @@ public class TransactionController {
         }
     }
     private void prepareEmailMessage(List<Transaction> transactions) {
-
         for (Transaction transaction : transactions) {
             for (User parent : transaction.getChild().getParents()) {
                 String to = parent.getEmail();

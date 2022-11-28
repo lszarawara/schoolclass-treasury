@@ -76,7 +76,7 @@ public class UserController {
         return "redirect:/mvc/user/current";
     }
 
-    @Secured("ROLE_ADMIN") //todo: czy zostawić?
+    @Secured("ROLE_ADMIN")
     @GetMapping("/delete/{id}")
     public String delete (@PathVariable("id") long id) {
         userService.delete(id);

@@ -1,8 +1,8 @@
 INSERT INTO `user` VALUES
-    (1000,'lukasz.szarawara@gmail.com','Łukasz', TRUE, 'Szarawara','admin','$2a$10$ieW19wwyp4CJXTSuqX2U8evHnvV0gP5UzLqWSN6V0TEEV1HD.jB3u','ROLE_ADMIN'),
+    (1000,'pierwszy@wp.com','Admin', TRUE, 'Admin','admin','$2a$10$ieW19wwyp4CJXTSuqX2U8evHnvV0gP5UzLqWSN6V0TEEV1HD.jB3u','ROLE_ADMIN'),
     (1001,'drugi@wp.pl','Drugi', TRUE, 'Skarbnik','drugi','$2a$10$fNk3gusLtiMND7adPkRV0O2lXCDCl.r1qLSGhmhU/VXh2crTo9iMy','ROLE_SUPERUSER'),
-    (1002,'trzeci@wp.pl','Trzeci', TRUE, 'Trzeci','Trzeci','$2a$10$DmWhvPg7AJB512iAhdulBuqSvTsKzr7ZQz7LN.W3mwOUM8T83jN16','ROLE_USER'),
-    (1003,'czwarty@wp.pl','Czwarty', TRUE, 'Czwarty','Czwarty','$2a$10$UQtMFtW97Zm.WJul4WlBNOpi4KoQ3z9PqGCtsQ0O3gXWdzvs1LUl6','ROLE_SUPERUSER'),
+    (1002,'trzeci@wp.pl','Trzeci', TRUE, 'Trzeci','trzeci','$2a$10$lRzzjO.i840ivYCdrnO9MuEMNC9GX7RBEroab8wPiJJsQnWkBKLNa','ROLE_USER'),
+    (1003,'czwarty@wp.pl','Czwarty', TRUE, 'Czwarty','Czwarty','$2a$10$3d3QhjHdFGz3qTL21YiQo.QypFvosc3Y7lfNsSDPpsTXteX9zMtYK','ROLE_SUPERUSER'),
     (1004,'jan.piaty@gmail.com','Jan', TRUE, 'Piaty','piaty','$2a$10$6iNjHFtNkigULFRDJlJCS.9Q.iPpL.bgvdqKJfJ6n9j.lqsPe3Ha2','ROLE_USER');
 
 INSERT INTO `school_class` VALUES
@@ -38,7 +38,7 @@ INSERT INTO `transaction` VALUES
     (15,30.00,'2022-11-03','Wycieczka', TRUE, 'DEBIT',6);
 
 INSERT INTO `user_child` VALUES
-    (1001,3),
+    (1001,5),
     (1001,6),
     (1002,4),
     (1003,6);
