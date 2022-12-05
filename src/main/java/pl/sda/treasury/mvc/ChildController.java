@@ -1,6 +1,7 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.*;
+
+import javax.mail.AuthenticationFailedException;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +114,12 @@ public class ChildController {
                 formU.setChildren(newListOfChildren);
             } finally {
                 userService.update(UserMapper.toEntity(formU));
+            try {
                 prepareEmailMessage(null, formU, id, "AddChild" );
+                } catch (MailAuthenticationException e) {
+                    model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                    return "msg-email-configuration";
+                }
             }
         } else{
             List<Child> newListOfChildren = new ArrayList<>();
@@ -119,7 +127,12 @@ public class ChildController {
             newListOfChildren.add(newChild);
             formC.setChildren(newListOfChildren);
             userService.update(UserMapper.toEntity(formC));
-            prepareEmailMessage(formC, null, id, "Welcome" );
+            try {
+                prepareEmailMessage(formC, null, id, "Welcome" );
+            } catch (MailAuthenticationException e) {
+                model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                return "msg-email-configuration";
+            }
         }
         return "redirect:/mvc/class/" + childService.find(id).getSchoolClass().getId();
     }

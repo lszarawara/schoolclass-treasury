@@ -1,16 +1,21 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailAuthenticationException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.treasury.mapper.dto.TransactionCreationDto;
-import pl.sda.treasury.mapper.dto.TransactionPreCreationDto;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.entity.User;
+import pl.sda.treasury.mapper.dto.TransactionCreationDto;
+import pl.sda.treasury.mapper.dto.TransactionPreCreationDto;
 import pl.sda.treasury.service.*;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -18,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/mvc/transaction")
 public class TransactionController {
@@ -27,6 +33,8 @@ public class TransactionController {
     private final SchoolClassService schoolClassService;
     private final CurrentSchoolClass currentSchoolClass;
     private final EmailServiceImpl emailService;
+
+    Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     @Secured({"ROLE_ADMIN"})
     @GetMapping
@@ -104,8 +112,12 @@ public class TransactionController {
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
-        if (("on").equals(mailing)) prepareEmailMessage(transactions);
-
+        if (("on").equals(mailing)) //prepareEmailMessage(transactions);
+            try {
+                prepareEmailMessage(transactions);
+            } catch (MailAuthenticationException e) {
+                logger.warn("Przy wysyłce emaili z powiadomieniami o transakcjach wystąpił błąd. Sprawdź konfigurację w application.properties.");
+            }
         return "createdTransactions";
     }
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {

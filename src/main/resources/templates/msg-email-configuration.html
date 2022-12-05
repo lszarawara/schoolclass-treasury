@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Zaktualizuj użytkownika</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
+  <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<header th:insert="fragments/header/header.html"></header>
+<div class="container">
+  <h2>Skonfiguruj ustawienia poczty</h2>
+
+  <p>Nie powiodła się wysyłka email. <br>Brak lub niewłaściwa konfiguracja serwera poczty wychodzącej. Skonfiguruj ustawienia w application.properties.</p>
+  <a class="btn btn-primary btn-sm" th:href="${'/mvc/class/' + schoolClass}" role="button">Dalej</a>
+
+</div>
+
+</body>
+</html>
