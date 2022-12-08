@@ -32,8 +32,9 @@
 
 <div class="row border border-primary" style="padding: 20px; margin: 10px; ">
   <h2>Uczniowie</h2>
-  <p th:text="'Klasa liczy uczniów aktywnych: ' + ${children.size()}"></p>
+
   <div th:unless="${schoolClass.getChildren().size()<2}">
+    <p th:text="'Klasa liczy uczniów aktywnych: ' + ${children.size()}"></p>
     <table id="childrenInClass"  class="table table-striped" >
       <thead>
       <tr>
@@ -44,7 +45,6 @@
         <th scope="col">Liczba kont rodziców</th>
       </tr>
       </thead>
-
 
       <tbody class="table-group-divider">
       <tr th:each="child, iStat : ${children}">
@@ -109,12 +109,15 @@
 
     <a class="btn btn-primary" th:href="${'/mvc/child/add?schoolClassId=' + schoolClass.id}" role="button">Dodaj kolejnego ucznia</a>
   </div>
-    </div>
 
-  <div th:if="${schoolClass.getChildren().size<2}" class="row border border-primary" style="padding: 20px; margin: 10px; ">
+  <div th:if="${schoolClass.getChildren().size<2}" >
     <p>Nie masz jeszcze żadnego ucznia na liście w tej klasie</p>
     <a class="btn btn-primary" th:href="${'/mvc/child/add?schoolClassId=' + schoolClass.id}" role="button">Dodaj pierwszego ucznia</a>
   </div>
+
+
+</div>
+
 
 
   <div class="row border border-primary" style="padding: 20px; margin: 10px; ">

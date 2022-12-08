@@ -14,10 +14,10 @@ import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.*;
 
-import javax.mail.AuthenticationFailedException;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -61,8 +61,7 @@ public class ChildController {
 
     @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/{id}/checkparent")
-    public String showForm(@ModelAttribute("parent") @Valid CreateUserForm form, BindingResult errors, @PathVariable("id") Long id, ModelMap model) { //Errors errors
-
+    public String showForm(@ModelAttribute("parent") @Valid CreateUserForm form, BindingResult errors, @PathVariable("id") Long id, ModelMap model) {
         if (errors.hasFieldErrors("email")) {
             model.addAttribute("parent", form);
             model.addAttribute("childId", String.valueOf(id));
@@ -70,14 +69,13 @@ public class ChildController {
         }
         CreateUserForm form2 = new CreateUserForm();
         form2.setEmail(form.getEmail());
-
         try {
             model.addAttribute("user", userService.findByEmail(form2.getEmail()));
             model.addAttribute("existingUser", "Y");
             if (userService.findByEmail(form2.getEmail()).getChildren().contains(childService.find(id))) {
                 model.addAttribute("parentAlreadyAdded", true);
                 model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());}
-            } catch (RuntimeException e){
+        } catch (RuntimeException e){
             form2.setRole(String.valueOf(User.Role.ROLE_USER));
             form2.setIsEnabled(false);
             model.addAttribute("parent", form2);
@@ -93,35 +91,28 @@ public class ChildController {
                                @ModelAttribute("user") UpdateUserForm formU,
                                @ModelAttribute("existingUser") String userExists,
                                @PathVariable("id") Long id, ModelMap model) {
-        if (errors.hasErrors()) {
-            model.addAttribute("parent", formC);
-            model.addAttribute("user", formU);
-            model.addAttribute("existingUser", userExists);
-            model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
-            model.addAttribute("childId", String.valueOf(id));
-            return "create-parent";
-        }
         if(userExists.equals("Y")) {
-            try {
-                List<Child> newListOfChildren = formU.getChildren();
-                Child newChild = childService.find(id);
-                newListOfChildren.add(newChild);
-                formU.setChildren(newListOfChildren);
-            } catch (NullPointerException e) {
-                List<Child> newListOfChildren = new ArrayList<>();
-                Child newChild = childService.find(id);
-                newListOfChildren.add(newChild);
-                formU.setChildren(newListOfChildren);
-            } finally {
-                userService.update(UserMapper.toEntity(formU));
+            List<Child> newListOfChildren = Optional.ofNullable(formU.getChildren())
+                    .orElse(new ArrayList<>());
+            Child newChild = childService.find(id);
+            newListOfChildren.add(newChild);
+            formU.setChildren(newListOfChildren);
+            userService.updateChildList(UserMapper.toEntity(formU));
             try {
                 prepareEmailMessage(null, formU, id, "AddChild" );
                 } catch (MailAuthenticationException e) {
                     model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
                     return "msg-email-configuration";
                 }
-            }
         } else{
+            if (errors.hasErrors()) {
+                model.addAttribute("parent", formC);
+                model.addAttribute("user", formU);
+                model.addAttribute("existingUser", userExists);
+                model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                model.addAttribute("childId", String.valueOf(id));
+                return "create-parent";
+            }
             List<Child> newListOfChildren = new ArrayList<>();
             Child newChild = childService.find(id);
             newListOfChildren.add(newChild);

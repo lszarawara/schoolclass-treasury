@@ -54,15 +54,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
     List<SchoolClass> schoolClasses;
 
-    public static enum Role {
+    public enum Role {
         ROLE_ADMIN("Admin"),
         ROLE_SUPERUSER("SuperUser"),
         ROLE_USER("User");
 
-
         public final String label;
 
-        private Role(String label) {
+        Role(String label) {
             this.label = label;
         }
 

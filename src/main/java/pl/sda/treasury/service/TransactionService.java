@@ -2,13 +2,11 @@ package pl.sda.treasury.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
 import pl.sda.treasury.repository.TransactionRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -30,10 +28,7 @@ public class TransactionService {
     }
 
     public List<Transaction> findAllbyChild(Long id) {
-        return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
-                .filter(transaction -> transaction.getChild().getId()==id)
-                .collect(Collectors.toList());
+        return repository.findAllByChild_Id(id);
     }
     public Transaction create(Transaction transaction) {
         return repository.save(transaction);
@@ -55,24 +50,24 @@ public class TransactionService {
         return findAllbyChild(id)
                 .stream()
                 .filter(transaction -> transaction.getType().equals(Transaction.Type.PAYMENT))
-                .map(transaction -> transaction.getAmount())
-                .reduce(BigDecimal.ZERO, (acc, curr) -> acc.add(curr));
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getDebitSumForChildren(Long id) {
         return findAllbyChild(id)
                 .stream()
                 .filter(transaction -> transaction.getType().equals(Transaction.Type.DEBIT))
-                .map(transaction -> transaction.getAmount())
-                .reduce(BigDecimal.ZERO, (acc, curr) -> acc.add(curr));
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getDueSumForChildren(Long id) {
         return findAllbyChild(id)
                 .stream()
                 .filter(transaction -> transaction.getType().equals(Transaction.Type.DUE))
-                .map(transaction -> transaction.getAmount())
-                .reduce(BigDecimal.ZERO, (acc, curr) -> acc.add(curr));
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getBalanceForChild(Long id) {
@@ -84,54 +79,43 @@ public class TransactionService {
     }
 
     public BigDecimal getBalanceForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllBySchoolClass(schoolClass);
-        BigDecimal balance = BigDecimal.ZERO;
-        for (int i = 0; i < childService.findAllBySchoolClass(schoolClass).size(); i++) {
-            balance = balance.add(getBalanceForChild(childrenList.get(i).getId()));
-        }
-        return balance;
+        return childService.findAllBySchoolClass(schoolClass)
+                .stream()
+                .map(child -> getBalanceForChild(child.getId()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     public List<BigDecimal> getListOfNonTechnicalBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClass);
-        List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
-            list.add(getBalanceForChild(childrenList.get(i).getId()));
-        }
-        return list;
+        return childService.findAllActiveNonTechnicalBySchoolClass(schoolClass)
+                .stream()
+                .map(childEntity -> getBalanceForChild(childEntity.getId()))
+                .collect(Collectors.toList());
     }
     public List<BigDecimal> getListOfNonActiveNonTechnicalBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass);
-        List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
-            list.add(getBalanceForChild(childrenList.get(i).getId()));
-        }
-        return list;
+        return childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass)
+                .stream()
+                .map(childEntity -> getBalanceForChild(childEntity.getId()))
+                .collect(Collectors.toList());
+
     }
     public BigDecimal getPaymentBalanceForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllBySchoolClass(schoolClass);
-        BigDecimal balance = BigDecimal.ZERO;
-        for (int i = 0; i < childService.findAllBySchoolClass(schoolClass).size(); i++) {
-            balance = balance.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
-        }
-        return balance;
+        return childService.findAllBySchoolClass(schoolClass)
+                .stream()
+                .map(child -> getPaymentBalanceForChild(child.getId()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public List<BigDecimal> getListOfNonTechnicalPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClass);
-        List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
-            list.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
-        }
-        return list;
+        return childService.findAllActiveNonTechnicalBySchoolClass(schoolClass)
+                .stream()
+                .map(childEntity -> getPaymentBalanceForChild(childEntity.getId()))
+                .collect(Collectors.toList());
     }
 
     public List<BigDecimal> getListOfNonActiveNonTechnicalPaymentBalancesForSchoolClass(SchoolClass schoolClass) {
-        List<Child> childrenList = childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass);
-        List<BigDecimal> list = new ArrayList<>();
-        for (int i = 0; i < childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass).size(); i++) {
-            list.add(getPaymentBalanceForChild(childrenList.get(i).getId()));
-        }
-        return list;
+        return childService.findAllNonActiveNonTechnicalBySchoolClass(schoolClass)
+                .stream()
+                .map(childEntity -> getPaymentBalanceForChild(childEntity.getId()))
+                .collect(Collectors.toList());
     }
 
     public BigDecimal getBalanceForTechnicalAccountBySchoolClass(SchoolClass schoolClass) {

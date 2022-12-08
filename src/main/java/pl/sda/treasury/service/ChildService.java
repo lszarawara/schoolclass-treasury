@@ -1,12 +1,12 @@
 package pl.sda.treasury.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.repository.ChildRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,25 +27,23 @@ public class ChildService {
     }
 
     public List<Child> findAllBySchoolClass(SchoolClass schoolClass) {
-        return StreamSupport
-                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
-                .filter(child -> child.getSchoolClass().equals(schoolClass))
+        return repository.findBySchoolClass(schoolClass)
+                .stream()
+                .sorted(Comparator.comparing(Child::getLastName).thenComparing(Child::getFirstName))
                 .collect(Collectors.toList());
     }
 
     public List<Child> findAllActiveNonTechnicalBySchoolClass(SchoolClass schoolClass) {
-        return StreamSupport
-                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
-                .filter(child -> child.getSchoolClass().equals(schoolClass))
+        return findAllBySchoolClass(schoolClass)
+                .stream()
                 .filter(child -> !child.isTechnical())
-                .filter(child -> child.getIsActive())
+                .filter(Child::getIsActive)
                 .collect(Collectors.toList());
     }
 
     public List<Child> findAllNonActiveNonTechnicalBySchoolClass(SchoolClass schoolClass) {
-        return StreamSupport
-                .stream(repository.findAll(Sort.by("lastName").and(Sort.by("firstName"))).spliterator(), false)
-                .filter(child -> child.getSchoolClass().equals(schoolClass))
+        return findAllBySchoolClass(schoolClass)
+                .stream()
                 .filter(child -> !child.isTechnical())
                 .filter(child -> !child.getIsActive())
                 .collect(Collectors.toList());
@@ -55,7 +53,7 @@ public class ChildService {
         return StreamSupport
                 .stream(repository.findAll().spliterator(), false)
                 .filter(child -> child.getSchoolClass().equals(schoolClass))
-                .filter(child -> child.isTechnical())
+                .filter(Child::isTechnical)
                 .findFirst().orElseThrow(() -> new RuntimeException("Technical account for school class =" + schoolClass.getName() + " not found"));
     }
     public Child create(Child child) {

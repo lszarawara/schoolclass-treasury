@@ -20,7 +20,6 @@ public class UserMapper {
                 .children(form.getChildren())
                 .build();
     }
-
     public static User toEntity(UpdateUserForm form) {
         return User.builder()
                 .id(form.getId())

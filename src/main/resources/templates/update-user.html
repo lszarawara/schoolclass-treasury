@@ -15,6 +15,7 @@
   <form th:method="post" th:action="@{/mvc/user/update}" th:object="${user}">
       <input type="hidden" th:field="*{id}" class="form-control" id="id">
       <input type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
+      <input type="hidden" th:field="*{children}" class="form-control" id="children">
 
       <div class="mb-3">
           <label for="firstName2" class="form-label">Imię:</label>

@@ -26,17 +26,12 @@ public class UserController {
     }
 
     @GetMapping("/add")
-    public String showCreateForm(Principal principal, ModelMap model) {
+    public String showCreateForm(ModelMap model) {
         CreateUserForm createUserForm = new CreateUserForm();
-        try {
-            userService.findByLogin(principal.getName()).getRole();
-        } catch (NullPointerException e) {
             createUserForm.setRole(String.valueOf(User.Role.ROLE_SUPERUSER));
             createUserForm.setIsEnabled(true);
-        } finally {
             model.addAttribute("user", createUserForm);
             return "create-user";
-        }
     }
 
     @PostMapping("/add")

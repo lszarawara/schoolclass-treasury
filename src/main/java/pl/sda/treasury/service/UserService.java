@@ -29,18 +29,20 @@ public class UserService {
     }
 
     public List<User> findAll() {
-        return StreamSupport
-                .stream(repository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return repository.findAll().stream().collect(Collectors.toList());
     }
 
     public User create(User user) {
-        user.setPassword(encodePassword(user.getPassword())); //do włączenia po dodaniu autentykacji
+        user.setPassword(encodePassword(user.getPassword()));
         return repository.save(user);
     }
 
     public User update(User user) {
         user.setPassword(encodePassword(user.getPassword()));
+        return repository.save(user);
+    }
+
+    public User updateChildList(User user) {
         return repository.save(user);
     }
 

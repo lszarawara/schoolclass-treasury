@@ -60,7 +60,6 @@
     <table class="table table-striped ">
       <thead>
       <tr>
-        <th scope="col">Id</th>
         <th scope="col">Imię</th>
         <th scope="col">Nazwisko</th>
         <th scope="col">Klasa</th>
@@ -71,16 +70,12 @@
 
       <tbody class="table-group-divider">
       <tr th:each="child : ${user.getChildren()}">
-        <th scope="row" th:text="${child.id}"> </th>
         <td th:text="${child.firstName}"> </td>
         <td th:text="${child.lastName}"> </td>
         <td th:text="${child.schoolClass.getName()}"> </td>
 
         <td>
           <a class="btn btn-outline-primary btn-sm" th:href="${'/mvc/child/balance/' + child.id}" role="button">Pokaż szczegóły rozliczeń</a>
-  <!--        <span>-->
-  <!--        <a class="btn btn-warning btn-sm" th:href="${'/mvc/user/delete/' + user.id}" role="button">Usuń</a>-->
-  <!--        </span>-->
         </td>
 
       </tr>

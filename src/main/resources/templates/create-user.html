@@ -37,7 +37,7 @@
       </div>
 
       <div class="mb-3">
-          <label for="email" class="form-label">Podaj email rodzica:</label>
+          <label for="email" class="form-label">Email:</label>
           <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
                  id="email" aria-describedby="validationServerEmailFeedback">
           <div id="validationServerEmailFeedback"
