@@ -3,6 +3,7 @@ package pl.sda.treasury.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,17 +29,15 @@ public class Child {
     private boolean isTechnical;
 
     @Setter
+    private Boolean isActive = true;
+
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "schoolClass_id", nullable = false)
     private SchoolClass schoolClass;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "user_child",
-            joinColumns = @JoinColumn(name = "child_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    List<User> parents;
-
+    @ManyToMany(mappedBy = "children", cascade = CascadeType.PERSIST)
+    List<User> parents = new ArrayList<>();
 
 
 }

@@ -6,30 +6,27 @@
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-
-
-
+<header th:insert="fragments/header/header.html"></header>
 
 <div class="container">
   <h2>Dodawanie rodzica</h2>
 
-<!--    <p th:text="${childId}"></p>-->
-
-
-
-<!--  <form th:method="get" th:action="@{/mvc/child/parent}" th:object="${parent}">-->
-<!--  <form th:method="post" th:action="@{/mvc/child/checkparent}" th:object="${parent}">-->
-  <form th:method="post" th:action="@{'/mvc/child/checkparent/' + __${childId}__}" th:object="${parent}">
+  <form th:method="post" th:action="@{'/mvc/child/' + __${childId}__ + '/checkparent'}" th:object="${parent}">
 
       <div class="mb-3">
         <label for="email" class="form-label">Podaj email rodzica:</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email">
+        <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
+               id="email" aria-describedby="validationServerEmailFeedback">
+        <div id="validationServerEmailFeedback"
+             class="invalid-feedback"
+             th:if="${#fields.hasErrors('email')}"
+             th:text="${#fields.errors('email').get(0)}">
+        </div>
       </div>
-    <p></p>
 
-<!--      <input type="hidden" th:field="${childId}" class="form-control" id="childId">-->
-<!--      <input type="text" th: th:field="${childId}" class="form-control" id="childId">-->
+    <p></p>
 
       <button type="submit" class="btn btn-primary">Sprawdź email</button>
   </form>

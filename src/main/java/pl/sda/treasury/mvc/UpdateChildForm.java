@@ -7,4 +7,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class UpdateChildForm extends CreateChildForm{
     private Long id;
+    private Boolean isActive;
 }

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
   <meta charset="UTF-8">
   <title>Lista dzieci</title>
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
+
+
 <div class = "container">
   <h2>Lista dzieci</h2>
   <table class="table table-sm table-striped w-75">
@@ -15,7 +18,6 @@
       <th scope="col" >Id</th>
       <th scope="col" >Imię</th>
       <th scope="col" >Nazwisko</th>
-<!--      todo: widoczność w pełnym widoku listy-->
       <th scope="col" >Klasa</th>
       <th scope="col" ></th>
       <th scope="col" ></th>
@@ -45,7 +47,10 @@
     </tbody>
   </table>
 
-  <a class="btn btn-primary" href="/mvc/child/add" role="button">Dodaj kolejnego ucznia</a>
+  <a class="btn btn-primary" onclick="history.back()" role="button">Powrót</a>
+  <a class="btn btn-primary" onclick="window.print()" role="button">Drukuj</a>
 </div>
+<footer th:insert="fragments/footer/footer.html"></footer>
+
 </body>
 </html>

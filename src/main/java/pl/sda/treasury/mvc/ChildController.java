@@ -1,20 +1,23 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.ChildMapper;
 import pl.sda.treasury.mapper.UserMapper;
-import pl.sda.treasury.service.ChildService;
-import pl.sda.treasury.service.SchoolClassService;
-import pl.sda.treasury.service.TransactionService;
-import pl.sda.treasury.service.UserService;
+import pl.sda.treasury.service.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class ChildController {
     private final SchoolClassService schoolClassService;
     private final TransactionService transactionService;
     private final UserService userService;
+    private final EmailServiceImpl emailService;
 
 
     @GetMapping()
@@ -32,80 +36,125 @@ public class ChildController {
         return "children";
     }
 
-    //    @Secured("ROLE_ADMIN")
-    //    @Secured("ROLE_SUPERUSER")
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/add")
     public String showCreateForm(@RequestParam("schoolClassId") Long schoolClassId, ModelMap model) {
-//        List<SchoolClass> schoolClassList = schoolClassService.findAll();
         CreateChildForm form = new CreateChildForm();
         form.setSchoolClass(schoolClassService.find(schoolClassId));
         model.addAttribute("child", form);
-
-        // todo: Do decyzji czy zostawiamy dla Admina
-        //        model.addAttribute("schoolClassList", schoolClassService.findAll());
-
         return "create-child";
     }
 
-    //    @Secured("ROLE_ADMIN")
-    //    @Secured("ROLE_SUPERUSER")
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/add")
     public String create(@ModelAttribute("child") CreateChildForm form) {
         childService.create(ChildMapper.toEntity(form));
         return "redirect:/mvc/class/" + form.getSchoolClass().getId();
     }
-
-    @GetMapping("/checkparent/{id}")
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
+    @GetMapping("/{id}/checkparent")
     public String checkParentsEmail(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("parent", new CreateUserForm());
-        String idi = String.valueOf(id);
-        model.addAttribute("childId", idi);
+        model.addAttribute("childId", String.valueOf(id));
         return "precreate-parent";
     }
 
-
-    @PostMapping("/checkparent/{id}")
-//    @PostMapping("/checkparent")
-    public String showForm(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id, ModelMap model) {
-//    public String showForm(@ModelAttribute("parent") CreateUserForm form, @ModelAttribute("childId") String id, ModelMap model) {
-//        tu nie działa Lang w Model Attribute
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
+    @PostMapping("/{id}/checkparent")
+    public String showForm(@ModelAttribute("parent") @Valid CreateUserForm form, BindingResult errors, @PathVariable("id") Long id, ModelMap model) {
+        if (errors.hasFieldErrors("email")) {
+            model.addAttribute("parent", form);
+            model.addAttribute("childId", String.valueOf(id));
+            return "precreate-parent";
+        }
+        CreateUserForm form2 = new CreateUserForm();
+        form2.setEmail(form.getEmail());
         try {
-            model.addAttribute("user", userService.findByEmail(form.getEmail()));
-            model.addAttribute("existingUser", true);
+            model.addAttribute("user", userService.findByEmail(form2.getEmail()));
+            model.addAttribute("existingUser", "Y");
+            if (userService.findByEmail(form2.getEmail()).getChildren().contains(childService.find(id))) {
+                model.addAttribute("parentAlreadyAdded", true);
+                model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());}
         } catch (RuntimeException e){
-            form.setRole(String.valueOf(User.Role.ROLE_USER));
-            model.addAttribute("user", form);
-            model.addAttribute("existingUser", false);
+            form2.setRole(String.valueOf(User.Role.ROLE_USER));
+            form2.setIsEnabled(false);
+            model.addAttribute("parent", form2);
+            model.addAttribute("existingUser", "N");
         } finally {
             model.addAttribute("childId", id);
             return "create-parent";
         }
     }
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/parent/{id}")
-    public String createParent(@ModelAttribute("parent") CreateUserForm form, @PathVariable("id") Long id) {
-        //todo: powtórzenia
-        try {
-            List<Child> newListOfChildren = form.getChildren();
+    public String createParent(@ModelAttribute("parent") @Valid CreateUserForm formC, BindingResult errors,
+                               @ModelAttribute("user") UpdateUserForm formU,
+                               @ModelAttribute("existingUser") String userExists,
+                               @PathVariable("id") Long id, ModelMap model) {
+        if(userExists.equals("Y")) {
+            List<Child> newListOfChildren = Optional.ofNullable(formU.getChildren())
+                    .orElse(new ArrayList<>());
             Child newChild = childService.find(id);
             newListOfChildren.add(newChild);
-            form.setChildren(newListOfChildren);
-        } catch (NullPointerException e) {
+            formU.setChildren(newListOfChildren);
+            userService.updateChildList(UserMapper.toEntity(formU));
+            try {
+                prepareEmailMessage(null, formU, id, "AddChild" );
+                } catch (MailAuthenticationException e) {
+                    model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                    return "msg-email-configuration";
+                }
+        } else{
+            if (errors.hasErrors()) {
+                model.addAttribute("parent", formC);
+                model.addAttribute("user", formU);
+                model.addAttribute("existingUser", userExists);
+                model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                model.addAttribute("childId", String.valueOf(id));
+                return "create-parent";
+            }
             List<Child> newListOfChildren = new ArrayList<>();
             Child newChild = childService.find(id);
             newListOfChildren.add(newChild);
-            form.setChildren(newListOfChildren);
-        } finally {
-            userService.create(UserMapper.toEntity(form));
-            return "redirect:/mvc/user";
+            formC.setChildren(newListOfChildren);
+            userService.update(UserMapper.toEntity(formC));
+            try {
+                prepareEmailMessage(formC, null, id, "Welcome" );
+            } catch (MailAuthenticationException e) {
+                model.addAttribute("schoolClass", childService.find(id).getSchoolClass().getId());
+                return "msg-email-configuration";
+            }
         }
-
+        return "redirect:/mvc/class/" + childService.find(id).getSchoolClass().getId();
     }
 
+    private void prepareEmailMessage(CreateUserForm formC, UpdateUserForm formU,Long childId, String messageType) {
+        String to = null;
+        String subject = null;
+        String text = null;
+        switch (messageType) {
+            case "Welcome":
+                to = formC.getEmail();
+                subject = "Skarbnik Klasowy - utworzenie konta rodzica";
+                text = "Dzień Dobry!\n\n" + "Utworzono dla Ciebie konto rodzica dla dziecka "
+                        + childService.find(childId).getFirstName() + " " + childService.find(childId).getLastName() + " w klasie " + childService.find(childId).getSchoolClass().getName() + ".\n\n"
+                        + "Zaloguje się w serwisie skarbnikklasowy.pl na Twoje konto i zmień hasło.\n"
+                        + "Twój login: " + formC.getLogin() + "\n"
+                        + "Twoje tymczasowe hasło: " + formC.getPassword()
+                        + "\nPozdrawiamy\nSkarbnik Klasowy";
+                break;
+            case "AddChild":
+                to = formU.getEmail();
+                subject = "Skarbnik Klasowy - dodanie dziecka do konta rodzica";
+                text = "Dzień Dobry!\n\n" + "Do Twojego konta dodano dziecko: "
+                        + childService.find(childId).getFirstName() + " " + childService.find(childId).getLastName() + " w klasie " + childService.find(childId).getSchoolClass().getName() + ".\n"
+                        + "\nPozdrawiamy\nSkarbnik Klasowy";
+                break;
+        }
+        emailService.sendSimpleMessage(to, subject, text);
+    }
 
-
-
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/{id}")
     public String showUpdateForm (@PathVariable("id") long id, ModelMap model) {
         model.addAttribute("child", childService.find(id));
@@ -113,25 +162,27 @@ public class ChildController {
         return "update-child";
     }
 
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/update")
     public String update(@ModelAttribute("child") UpdateChildForm form) {
         childService.create(ChildMapper.toEntity(form));
-        return "redirect:/mvc/child";
+        return "redirect:/mvc/class/" + childService.find(form.getId()).getSchoolClass().getId();
     }
 
+    @Secured({"ROLE_ADMIN"})
     @PostMapping("/delete/{id}")
     public String delete (@PathVariable("id") long id) {
         childService.delete(id);
         return "redirect:/mvc/child";
     }
 
+    @PreAuthorize("@securityService.isParent(#id) || @securityService.isTreasurer(#id) || hasRole('ROLE_ADMIN')")
     @GetMapping("/balance/{id}")
     public String getTransactionsListByChildId(@PathVariable("id") Long id, ModelMap model) {
         model.addAttribute("transactions", transactionService.findAllbyChild(id));
         model.addAttribute("child", childService.find(id));
         model.addAttribute("sumPayment", transactionService.getPaymentSumForChildren(id));
         model.addAttribute("sumDebit", transactionService.getDebitSumForChildren(id));
-
         return "transactionsByChild";
     }
 }

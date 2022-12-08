@@ -1,19 +1,20 @@
 package pl.sda.treasury.mvc;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import pl.sda.treasury.dto.TransactionCreationDto;
-import pl.sda.treasury.dto.TransactionPreCreationDto;
 import pl.sda.treasury.entity.Child;
-import pl.sda.treasury.entity.SchoolClass;
 import pl.sda.treasury.entity.Transaction;
-import pl.sda.treasury.mapper.TransactionMapper;
-import pl.sda.treasury.service.ChildService;
-import pl.sda.treasury.service.CurrentSchoolClass;
-import pl.sda.treasury.service.SchoolClassService;
-import pl.sda.treasury.service.TransactionService;
+import pl.sda.treasury.entity.User;
+import pl.sda.treasury.mapper.dto.TransactionCreationDto;
+import pl.sda.treasury.mapper.dto.TransactionPreCreationDto;
+import pl.sda.treasury.service.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/mvc/transaction")
 public class TransactionController {
@@ -29,24 +31,26 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final ChildService childService;
     private final SchoolClassService schoolClassService;
-
     private final CurrentSchoolClass currentSchoolClass;
+    private final EmailServiceImpl emailService;
 
+    Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
+    @Secured({"ROLE_ADMIN"})
     @GetMapping
     public String getTransactionsList(ModelMap model) {
         model.addAttribute("transactions", transactionService.findAll());
         return "transactions";
     }
 
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @GetMapping("/precreate/{type}")
     public String showPreCreateForm(@PathVariable("type") String type, ModelMap model) {
         TransactionPreCreationDto preForm = prepareTransactionPreCreationDto(type);
         model.addAttribute("preForm", preForm);
         model.addAttribute("isPredefined", false);
-
-        return "create-transaction2";
+        model.addAttribute("mailing", false);
+        return "create-transaction";
     }
 
     private static TransactionPreCreationDto prepareTransactionPreCreationDto(String type) {
@@ -59,20 +63,21 @@ public class TransactionController {
         return preForm;
     }
 
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/precreate")
         public String showCreateForm(@ModelAttribute TransactionPreCreationDto preForm,
+                                     @RequestParam (required = false) String mailing,
                                      ModelMap model) {
             model.addAttribute("form", prepareTransactionCreationForm(preForm));
             model.addAttribute("isPredefined", true);
             model.addAttribute("preForm", preForm);
-            return "create-transaction2";
-
+            model.addAttribute("mailing", mailing);//mailing != null);
+            return "create-transaction";
     }
 
     private TransactionCreationDto prepareTransactionCreationForm(TransactionPreCreationDto preForm) {
         TransactionCreationDto form = new TransactionCreationDto();
-        List<Child> childList = childService.findAllNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
-
+        List<Child> childList = childService.findAllActiveNonTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId()));
         for (int i=0; i< childList.size(); i++) {
             Transaction transaction = new Transaction();
             transaction.setChild(childList.get(i));
@@ -98,21 +103,26 @@ public class TransactionController {
                 break;
         }
     }
-
+    @Secured({"ROLE_SUPERUSER", "ROLE_ADMIN"})
     @PostMapping("/create")
     public String create(@ModelAttribute TransactionPreCreationDto preForm,
-                         @ModelAttribute TransactionCreationDto form, ModelMap model) {
-
+                         @ModelAttribute TransactionCreationDto form,
+                         @RequestParam (required = false) String mailing,
+                         ModelMap model) {
         List<Transaction> transactions = prepareSaveRequest(preForm, form);
         model.addAttribute("createdTransactions", transactions);
         transactionService.createAll(transactions);
+        if (("on").equals(mailing)) //prepareEmailMessage(transactions);
+            try {
+                prepareEmailMessage(transactions);
+            } catch (MailAuthenticationException e) {
+                logger.warn("Przy wysyłce emaili z powiadomieniami o transakcjach wystąpił błąd. Sprawdź konfigurację w application.properties.");
+            }
         return "createdTransactions";
     }
-
     private List<Transaction> prepareSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
         List<Transaction> preparedTransactionsList = null;
         switch (preForm.getSelectedOption()) {
-
             case "1":
                 int childrenNumber1 = form.getTransactions().size();
                 BigDecimal amountToDebit1 = preForm.getAmount().divide(new BigDecimal(childrenNumber1), 2, RoundingMode.HALF_EVEN);
@@ -149,7 +159,6 @@ public class TransactionController {
                         .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
                         .collect(Collectors.toList());
                 break;
-
             case "6":
                 preparedTransactionsList = form.getTransactions()
                         .stream()
@@ -157,7 +166,6 @@ public class TransactionController {
                                 .subtract(transactionService.getBalanceForChild(transaction.getChild().getId()))); return transaction;})
                         .collect(Collectors.toList());
                 break;
-
             default: //CASE 0, 5
                 preparedTransactionsList = form.getTransactions()
                         .stream()
@@ -176,97 +184,22 @@ public class TransactionController {
             roundingTransaction.setDescription(preForm.getDescription());
             roundingTransaction.setChild(childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass.getId())));
             setTransactionType(preForm, roundingTransaction);
-//            Transaction roundingTransaction = new Transaction(,preForm.getDate(), rounding, preForm.getDescription(),null,
-//                    childService.findTechnicalBySchoolClass(schoolClassService.find(currentSchoolClass)), null);
-//            setTransactionType(preForm, roundingTransaction);
-////                    to tu jest brzydko, jak to powiązać z zestawem transakcji i spowodować, że zapisze się całość lub nic?
             transactionService.create(roundingTransaction);
         }
     }
-
-//    private void handleSaveRequest(TransactionPreCreationDto preForm, TransactionCreationDto form) {
-//        switch (preForm.getSelectedOption()) {
-////            case "0":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .filter(transaction -> transaction.getAmount() != null)
-//////                        .filter(transaction -> transaction.getAmount().signum()>0)
-////                        .collect(Collectors.toList()));
-////                break;
-////            case "1":
-////                int childrenNumber = form.getTransactions().size();
-////                BigDecimal amountToDebit = preForm.getAmount().divide(new BigDecimal(childrenNumber), 2, RoundingMode.HALF_EVEN);
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(amountToDebit); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-////            case "2":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-//            case "3":
-//                int childrenNumber = (int) form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .count();
-//
-//                BigDecimal amountToDebit = preForm.getAmount().divide(new BigDecimal(childrenNumber), 2, RoundingMode.HALF_EVEN);
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .map(transaction -> {transaction.setAmount(amountToDebit); return transaction;})
-//                        .collect(Collectors.toList()));
-//                break;
-//            case "4":
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getIsParticipating())
-//                        .map(transaction -> {transaction.setAmount(preForm.getAmount()); return transaction;})
-//                        .collect(Collectors.toList()));
-//                break;
-//
-////            case "6":
-////                transactionService.createAll(form.getTransactions()
-////                        .stream()
-////                        .map(transaction -> {transaction.setAmount(preForm.getAmount()
-////                                .subtract(transactionService.getBalanceForChild(transaction.getChild().getId()))); return transaction;})
-////                        .collect(Collectors.toList()));
-////                break;
-//
-//            default:
-//                transactionService.createAll(form.getTransactions()
-//                        .stream()
-//                        .filter(transaction -> transaction.getAmount() != null)
-//                        .collect(Collectors.toList()));
-//
-//        }
-//    }
-
-
-    @GetMapping("/add")
-    public String showCreateFormClassSelection(ModelMap model) {
-        model.addAttribute("schoolClassList", schoolClassService.findAll());
-        model.addAttribute("selectedSchoolClass", new SchoolClass(currentSchoolClass.getId()));
-
-        return "create-transaction";
-    }
-
-    @GetMapping("/add/{schoolClass}")
-    public String showCreateForm(@PathVariable("schoolClass") SchoolClass schoolClass, ModelMap model) {
-        model.addAttribute("transaction", new CreateTransactionForm());
-        model.addAttribute("childList", childService.findAllBySchoolClass(schoolClass));
-
-
-        return "create-transaction";
-    }
-
-    //    @Secured("ROLE_ADMIN")
-    @PostMapping("/add")
-    public String create(@ModelAttribute("user") CreateTransactionForm form) {
-        transactionService.create(TransactionMapper.toEntity(form));
-        return "redirect:/mvc/user/add";
+    private void prepareEmailMessage(List<Transaction> transactions) {
+        for (Transaction transaction : transactions) {
+            for (User parent : transaction.getChild().getParents()) {
+                String to = parent.getEmail();
+                String subject = "Skarbnik Klasowy - nowa składka";
+                String text = "Dzień Dobry!\n\n" + "Proszę o dokonanie wpłaty dla dziecka "
+                        + childService.find(transaction.getChild().getId()).getFirstName() + " " + childService.find(transaction.getChild().getId()).getLastName()
+                        + " w klasie " + childService.find(transaction.getChild().getId()).getSchoolClass().getName() + ".\n"
+                        + "Tytuł wpłaty składki: " + transaction.getDescription() + " - " + childService.find(transaction.getChild().getId()).getFirstName() + " " + childService.find(transaction.getChild().getId()).getLastName()+ ".\n"
+                        + "Kwota: " + transaction.getAmount() + " zł.\n"
+                        + "\n\nPozdrawiamy\nSkarbnik Klasowy";
+                emailService.sendSimpleMessage(to, subject, text);
+            }
+        }
     }
 }

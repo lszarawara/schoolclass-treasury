@@ -2,8 +2,6 @@ package pl.sda.treasury.mvc;
 
 import lombok.Data;
 import pl.sda.treasury.entity.Child;
-import pl.sda.treasury.entity.Transaction;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

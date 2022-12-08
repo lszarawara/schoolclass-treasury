@@ -6,41 +6,112 @@
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class="container">
   <h2>Dodawanie rodzica</h2>
 
 
-  <form th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
-<!--      <input type="hidden" th:field="*{id}" class="form-control" id="id">-->
+
+  <form th:if="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${user}">
+      <input type="hidden" th:field="*{id}" class="form-control" id="id">
+      <input type="hidden" th:field="*{schoolClasses}" class="form-control" id="schoolClasses">
+      <input type="hidden" th:field="*{children}" class="form-control" id="children">
+      <input type="hidden" th:field="*{password}" class="form-control" id="password">
+      <input type="hidden" th:field="*{login}" class="form-control" id="login">
+      <input type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
+      <input type="hidden" name="existingUser" th:value="Y" class="form-control" id="existingUser">
+
       <div class="mb-3">
         <label for="firstName" class="form-label">Imię:</label>
-        <input type="text" th:field="*{firstName}" class="form-control" id="firstName">
+        <input type="text" th:field="*{firstName}" readonly class="form-control" id="firstName">
       </div>
       <div class="mb-3">
         <label for="lastName" class="form-label">Nazwisko:</label>
-        <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
+        <input type="text" th:field="*{lastName}" readonly class="form-control" id="lastName">
       </div>
       <div class="mb-3">
         <label for="email" class="form-label">Email:</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email">
-      </div>
-      <div class="mb-3">
-        <label for="login" class="form-label">Login:</label>
-        <input type="text" th:field="*{login}" class="form-control" id="login">
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Hasło:</label>
-        <input type="password" th:field="*{password}" class="form-control" id="password">
+        <input type="email" th:field="*{email}" readonly class="form-control" id="email">
       </div>
       <input type="hidden" th:field="*{role}" class="form-control" id="role">
-<!--    </div>-->
     <p></p>
 
       <input type="hidden" th:field="${childId}" class="form-control" id="childId">
 
-    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+      <div th:if="${parentAlreadyAdded}">
+          <h6 class="text-danger">Ten rodzic został już przypisany do tego dziecka!</h6>
+          <p></p>
+          <a class="btn btn-primary" th:href="${'/mvc/class/' + __${schoolClass}__}" role="button">Wróć do klasy</a>
+      </div>
+
+
+    <button th:unless="${parentAlreadyAdded}" type="submit" class="btn btn-primary">Dodaj rodzica do dziecka</button>
   </form>
+
+
+    <form th:unless="${existingUser == 'Y'}" th:method="post" th:action="@{'/mvc/child/parent/' + __${childId}__}" th:object="${parent}">
+
+        <input type="hidden" name="existingUser" th:value="N" class="form-control" id="existingUser2">
+
+        <div class="mb-3">
+            <label for="firstName2" class="form-label">Imię:</label>
+            <input type="text" th:field="*{firstName}" th:class="${#fields.hasErrors('firstName')} ? 'form-control is-invalid' : 'form-control'"
+                   id="firstName2" aria-describedby="validationServerFirstNameFeedback">
+            <div id="validationServerFirstNameFeedback"
+                 class="invalid-feedback"
+                 th:if="${#fields.hasErrors('firstName')}"
+                 th:text="${#fields.errors('firstName').get(0)}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName2" class="form-label">Nazwisko:</label>
+            <input type="text" th:field="*{lastName}" th:class="${#fields.hasErrors('lastName')} ? 'form-control is-invalid' : 'form-control'"
+                   id="lastName2" aria-describedby="validationServerLastNameFeedback">
+            <div id="validationServerLastNameFeedback"
+                 class="invalid-feedback"
+                 th:if="${#fields.hasErrors('lastName')}"
+                 th:text="${#fields.errors('lastName').get(0)}">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="email2" class="form-label">Email:</label>
+            <input type="email" th:field="*{email}" readonly class="form-control" id="email2">
+        </div>
+
+        <div class="mb-3">
+            <label for="login2" class="form-label">Login:</label>
+            <input type="text" th:field="*{login}" th:class="${#fields.hasErrors('login')} ? 'form-control is-invalid' : 'form-control'"
+                   id="login2" aria-describedby="validationServerLoginFeedback">
+            <div id="validationServerLoginFeedback"
+                 class="invalid-feedback"
+                 th:if="${#fields.hasErrors('login')}"
+                 th:text="${#fields.errors('login').get(0)}">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password2" class="form-label">Hasło:</label>
+            <input type="password" th:field="*{password}" th:class="${#fields.hasErrors('password')} ? 'form-control is-invalid' : 'form-control'"
+                   id="password2" aria-describedby="validationServerPasswordFeedback">
+            <div id="validationServerPasswordFeedback"
+                 class="invalid-feedback"
+                 th:if="${#fields.hasErrors('password')}"
+                 th:text="${#fields.errors('password').get(0)}">
+            </div>
+        </div>
+
+<input type="hidden" th:field="*{role}" class="form-control" id="role2">
+        <input type="hidden" th:field="${parent.isEnabled}" class="form-control" id="isEnabled2">
+        <p></p>
+
+        <input type="hidden" th:field="${childId}" class="form-control" id="childId2">
+
+        <button type="submit" class="btn btn-primary">Utwórz rodzica i dodaj do dziecka</button>
+    </form>
+
 </div>
 </body>
 </html>

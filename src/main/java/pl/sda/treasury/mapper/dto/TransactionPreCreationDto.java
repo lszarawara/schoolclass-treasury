@@ -1,16 +1,11 @@
-package pl.sda.treasury.dto;
+package pl.sda.treasury.mapper.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.sda.treasury.entity.Transaction;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Getter
 @Setter

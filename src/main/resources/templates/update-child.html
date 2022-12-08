@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8">
   <title>Edytuj konto dziecka</title>
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class="container">
   <h2>Edycja konta dziecka</h2>
 
@@ -21,7 +23,7 @@
         <label for="lastName" class="form-label">Nazwisko:</label>
         <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
       </div>
-      <div class="form-group">
+      <div sec:authorize="hasAuthority('ROLE_ADMIN')" class="form-group mb-3">
         <label for="schoolClass" class="form-label">Klasa:</label>
         <select class="form-control selectpicker" th:field="*{schoolClass}" id="schoolClass">
           <option value="">Wybierz z listy</option>
@@ -31,12 +33,37 @@
           </option>
         </select>
       </div>
-<!--    </div>-->
+      <input sec:authorize="!hasAuthority('ROLE_ADMIN')" type="hidden" th:field="*{schoolClass}" class="form-control" id="schoolClass2">
+
+
+      <div class="mb-3">
+      <label for="isActive" class="form-label">Status dziecka:</label>
+      <select class="form-control" th:field="*{isActive}" id="isActive">
+          <option th:value="1" >Aktywny</option>
+          <option th:value="0" >Nieaktywny</option>
+      </select>
+      </div>
     <p></p>
 
-<!--      <form th:action="${'/mvc/transaction/add/' + schoolClass}" th:method="get">-->
-<!--          <button type="submit" class="btn btn-warning btn-sm" >TEST</button>-->
-<!--      </form>-->
+      <h2>Lista rodziców</h2>
+      <table class="table table-sm table-striped w-75">
+          <thead class="thead-light">
+          <tr>
+              <th scope="col" >Imię</th>
+              <th scope="col" >Nazwisko</th>
+              <th scope="col" >Email</th>
+          </tr>
+          </thead>
+
+          <tbody class="table-group-divider">
+          <tr th:each="parent : ${child.getParents()}">
+              <td th:text="${parent.firstName}"> </td>
+              <td th:text="${parent.lastName}"> </td>
+              <td th:text="${parent.email}"> </td>
+          </tr>
+          </tbody>
+      </table>
+
 
 
     <button type="submit" class="btn btn-primary">Zapisz zmiany</button>

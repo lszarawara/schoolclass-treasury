@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class="container">
   <h2>Dodawanie nowego konta dziecka</h2>
 
@@ -21,20 +23,7 @@
         <input type="text" th:field="*{lastName}" class="form-control" id="lastName">
       </div>
 
-
-<!--      todo: ewentualnie do zamiany/włączenia dla admina-->
       <input type="hidden" th:field="*{schoolClass}" class="form-control" id="schoolClass">
-<!--      <div class="form-group">-->
-<!--        <label for="schoolClass" class="form-label">Klasa:</label>-->
-<!--        <select class="form-control selectpicker" th:field="*{schoolClass}" id="schoolClass">-->
-<!--          <option value="">Wybierz z listy</option>-->
-<!--          <option th:each="class : ${schoolClassList}"-->
-<!--                  th:value="${class.id}"-->
-<!--                  th:text="${class.name}">schoolClass-->
-<!--          </option>-->
-<!--        </select>-->
-<!--      </div>-->
-<!--    </div>-->
     <p></p>
 
     <button type="submit" class="btn btn-primary">Dodaj dziecko</button>

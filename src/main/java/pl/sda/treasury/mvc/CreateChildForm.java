@@ -8,4 +8,5 @@ public class CreateChildForm {
     private String firstName;
     private String lastName;
     private SchoolClass schoolClass;
+    private Boolean isActive = Boolean.valueOf("true");
 }

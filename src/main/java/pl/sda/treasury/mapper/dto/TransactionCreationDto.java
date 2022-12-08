@@ -1,8 +1,7 @@
-package pl.sda.treasury.dto;
+package pl.sda.treasury.mapper.dto;
 
 import lombok.*;
 import pl.sda.treasury.entity.Transaction;
-
 import java.util.ArrayList;
 import java.util.List;
 

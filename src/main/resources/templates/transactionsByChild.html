@@ -6,7 +6,9 @@
   <link rel="stylesheet" href="/webjars/bootstrap/5.2.0/css/bootstrap.min.css">
   <script src="/webjars/bootstrap/5.2.0/js/bootstrap.min.js"></script>
 </head>
+
 <body>
+<header th:insert="fragments/header/header.html"></header>
 <div class = "container">
   <h2>Lista transakcji</h2>
   <h4 th:text="${child.firstName} + ' ' + ${child.lastName}" ></h4>
@@ -43,5 +45,6 @@
   <a class="btn btn-primary" onclick="history.back()" role="button">Powrót</a>
   <a class="btn btn-primary" onclick="window.print()" role="button">Drukuj</a>
 </div>
+<footer th:insert="fragments/footer/footer.html"></footer>
 </body>
 </html>

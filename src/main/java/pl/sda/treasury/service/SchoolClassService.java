@@ -2,10 +2,7 @@ package pl.sda.treasury.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pl.sda.treasury.entity.Child;
 import pl.sda.treasury.entity.SchoolClass;
-import pl.sda.treasury.entity.User;
-import pl.sda.treasury.repository.ChildRepository;
 import pl.sda.treasury.repository.SchoolClassRepository;
 
 import java.util.List;
@@ -28,8 +25,6 @@ public class SchoolClassService {
     }
 
     public SchoolClass findLastId () {
-//        return repository.findTopByOrderByIdDesc();
-        //zamiennie ostatni ze streama:
         return StreamSupport
                 .stream(repository.findAll().spliterator(), false)
                 .reduce((first, second) -> second)
@@ -43,7 +38,6 @@ public class SchoolClassService {
     public SchoolClass update(SchoolClass schoolClass) {
         return repository.save(schoolClass);
     }
-//patch???
 
     public void delete(long id) {
         repository.deleteById(id);

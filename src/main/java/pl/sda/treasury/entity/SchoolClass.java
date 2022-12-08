@@ -30,5 +30,4 @@ public class SchoolClass {
 
     public SchoolClass(Long currentSchoolClass) {
     }
-//    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY )
 }
