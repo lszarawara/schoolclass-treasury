@@ -5,7 +5,7 @@
 - Projekt końcowy kursu Java od podstaw realizowanego w 2022 (marzec - listopad) roku w SDA
 - Zainspirowana potrzebami skarbnika klasowego
 
-## Wykorzytsane tehcnologie
+## Wykorzytsane technologie
 - Spring Boot - version 2.7.4
 - Bootstrap - version 5.2.0
 - Thymeleaf - version 3.0.11
