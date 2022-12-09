@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.4</version>
-        <relativePath/>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.sda</groupId>
     <artifactId>treasury</artifactId>
@@ -18,6 +18,7 @@
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
     </properties>
     <dependencies>
+        <!--        spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -51,6 +52,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        <!--        database-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -58,6 +60,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>1.4.200</version>
         </dependency>
         <!--        web-->
         <dependency>
