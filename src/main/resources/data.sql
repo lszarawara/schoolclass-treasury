@@ -1,4 +1,4 @@
-INSERT INTO `user` VALUES
+INSERT INTO `users` VALUES
     (1000,'pierwszy@wp.com','Admin', TRUE, 'Admin','admin','$2a$10$ieW19wwyp4CJXTSuqX2U8evHnvV0gP5UzLqWSN6V0TEEV1HD.jB3u','ROLE_ADMIN'),
     (1001,'drugi@wp.pl','Drugi', TRUE, 'Skarbnik','drugi','$2a$10$fNk3gusLtiMND7adPkRV0O2lXCDCl.r1qLSGhmhU/VXh2crTo9iMy','ROLE_SUPERUSER'),
     (1002,'trzeci@wp.pl','Trzeci', TRUE, 'Trzeci','trzeci','$2a$10$lRzzjO.i840ivYCdrnO9MuEMNC9GX7RBEroab8wPiJJsQnWkBKLNa','ROLE_USER'),
