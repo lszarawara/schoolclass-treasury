@@ -24,10 +24,17 @@ public class UserService {
         return repository.findByEmail(email).orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
     }
 
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
     public User findByLogin(String login) {
         return repository.findByLogin(login).orElseThrow(() -> new RuntimeException("User with email " + login + " not found"));
     }
 
+    public boolean existsByLogin(String login) {
+        return repository.existsByLogin(login);
+    }
     public List<User> findAll() {
         return repository.findAll().stream().collect(Collectors.toList());
     }

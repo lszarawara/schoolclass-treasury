@@ -38,23 +38,31 @@
 
       <div class="mb-3">
           <label for="email" class="form-label">Email:</label>
-          <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'form-control is-invalid' : 'form-control'"
-                 id="email" aria-describedby="validationServerEmailFeedback">
+          <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email') || emailExists == true}  ? 'form-control is-invalid' : 'form-control'"
+                 id="email" aria-describedby="validationServerEmailFeedback, userEmailExists">
           <div id="validationServerEmailFeedback"
                class="invalid-feedback"
                th:if="${#fields.hasErrors('email')}"
                th:text="${#fields.errors('email').get(0)}">
           </div>
+          <div id="userEmailExists"
+               class="invalid-feedback"
+               th:if="${emailExists}">Użytkownik o tym adresie email już istnieje!
+          </div>
       </div>
 
       <div class="mb-3">
           <label for="login2" class="form-label">Login:</label>
-          <input type="text" th:field="*{login}" th:class="${#fields.hasErrors('login')} ? 'form-control is-invalid' : 'form-control'"
-                 id="login2" aria-describedby="validationServerLoginFeedback">
+          <input type="text" th:field="*{login}" th:class="${#fields.hasErrors('login') || loginExists == true} ? 'form-control is-invalid' : 'form-control'"
+                 id="login2" aria-describedby="validationServerLoginFeedback, userLoginExists">
           <div id="validationServerLoginFeedback"
                class="invalid-feedback"
                th:if="${#fields.hasErrors('login')}"
                th:text="${#fields.errors('login').get(0)}">
+          </div>
+          <div id="userLoginExists"
+               class="invalid-feedback"
+               th:if="${loginExists}">Użytkownik o tym loginie już istnieje!
           </div>
       </div>
 
@@ -71,6 +79,8 @@
 
       <input sec:authorize="!hasRole('ROLE_ADMIN')" type="hidden" th:field="*{role}" class="form-control" id="role1">
       <input sec:authorize="!hasRole('ROLE_ADMIN')" type="hidden" th:field="*{isEnabled}" class="form-control" id="isEnabled">
+      <input sec:authorize="hasRole('ROLE_ADMIN')" type="hidden" name="isEnabled" th:value="'false'" class="form-control" id="isEnabled1">
+
       <div sec:authorize="hasRole('ROLE_ADMIN')" class="form-group">
         <label for="role2" class="form-label">Rola:</label>
         <select class="form-control selectpicker" th:field="*{role}" id="role2">
