@@ -5,12 +5,17 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.sda.treasury.entity.User;
 import pl.sda.treasury.mapper.UserMapper;
 import pl.sda.treasury.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
+
+import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,11 +40,30 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute("user") CreateUserForm form) {
+    public String create(@ModelAttribute("user") @Valid CreateUserForm form, BindingResult errors, ModelMap model, HttpServletRequest request) {
+        boolean shouldShowCreateUserAgain = false;
+        if (userService.existsByEmail(form.getEmail())) {
+            model.addAttribute("emailExists", true);
+            shouldShowCreateUserAgain = true;
+        }
+        if (userService.existsByLogin(form.getLogin())) {
+            model.addAttribute("loginExists", true);
+            shouldShowCreateUserAgain = true;
+        }
+        if (errors.hasErrors()) {
+            shouldShowCreateUserAgain = true;
+        }
+        if (shouldShowCreateUserAgain) {
+            model.addAttribute("user", form);
+            return "create-user";
+        }
         User user = userService.create(UserMapper.toEntity(form));
-//      todo: if ADMIN: return "redirect:/mvc/user/" + user.getId();
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            return "redirect:/mvc/user/" + user.getId();
+        }
         return "redirect:/mvc/user/current";
     }
+
 
     @GetMapping("/current")
     public String showCurrentUserDetails (Principal principal, ModelMap model) {
